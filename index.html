@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美联储大宗商品长图生成器 - 专业分屏版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            /* 海报色彩变量 */
+            --bg-color: #12182b;
+            --card-bg: #1a2238;
+            --text-main: #ffffff;
+            --text-sub: #a0a5b5;
+            --up-color: #ff5722;
+            --down-color: #4ade80;
+            --timeline-line: #2a3454;
+            /* 控制台色彩变量 */
+            --admin-bg: #f8f9fb;
+            --btn-primary: #1890ff;
+            --btn-danger: #ff4d4f;
+            --border-color: #e4e7ed;
+        }
+
+        /* 页面整体左右布局 */
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Noto Sans SC', 'Source Han Sans CN', 'Source Han Sans SC', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; 
+            background-color: #222;
+        }
+
+        /* ================= 左侧控制台区域 ================= */
+        .left-panel {
+            width: 480px; min-width: 480px;
+            background: #ffffff;
+            height: 100vh;
+            overflow-y: auto; 
+            box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+            z-index: 10;
+            display: flex; flex-direction: column;
+        }
+        
+        .panel-header { padding: 20px 25px; background: #fff; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 20; }
+        .panel-header h2 { margin: 0; font-size: 20px; color: #333; font-weight: 900; }
+        
+        .panel-body { padding: 25px; flex: 1; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #606266; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px;
+            font-family: inherit; font-size: 14px; outline: none; box-sizing: border-box; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--btn-primary); }
+        .form-group textarea { height: 100px; resize: vertical; }
+
+        .rates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .rate-item { background: var(--admin-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center;}
+        .rate-item label { font-size: 12px; margin-bottom: 4px; display: block; color: #666; }
+        .rate-item input { width: 90%; text-align: center; font-weight: bold; padding: 6px; }
+
+        .btn-add { background: var(--btn-primary); color: #fff; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-add:hover { opacity: 0.9; }
+
+        .data-list-title { font-size: 16px; font-weight: bold; margin: 30px 0 15px; color: #333; border-left: 4px solid var(--btn-primary); padding-left: 10px; }
+        .data-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 15px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 10px; }
+        .data-item-info strong { font-size: 15px; color: #333; display: block; margin-bottom: 4px; }
+        .data-item-info span { font-size: 12px; color: #999; }
+        .btn-delete { background: var(--btn-danger); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+
+        .panel-footer { padding: 20px 25px; background: #fff; border-top: 1px solid var(--border-color); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .btn-export { background: #ff5722; color: #fff; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(255,87,34,0.4); margin-top: 15px; }
+        .btn-export:hover { opacity: 0.9; }
+        .qr-upload-label { cursor: pointer; color: var(--btn-primary); font-weight: bold; font-size: 14px; text-decoration: underline; display: inline-block; }
+
+        /* ================= 右侧实时预览区域 ================= */
+        .right-panel {
+            flex: 1; height: 100vh; overflow-y: auto; 
+            display: flex; flex-direction: column; align-items: center;
+            background-color: #2a2a2a; 
+            padding: 40px 0; box-sizing: border-box;
+            background-image: linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333), linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333);
+            background-size: 20px 20px; background-position: 0 0, 10px 10px; 
+        }
+
+        #poster-scale-wrapper {
+            transform-origin: top center;
+            transform: scale(0.65); 
+            transition: transform 0.3s;
+            margin-bottom: 100px;
+        }
+
+        .poster-container {
+            width: 1242px; background-color: var(--bg-color); color: var(--text-main); 
+            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            padding-bottom: 0;
+        }
+
+        /* 替换后的固定头图样式 */
+        .header-image {
+            width: 100%;
+            display: block;
+        }
+        .header-image img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .timeline-container { padding: 50px 40px 20px; position: relative; }
+        .timeline-container::before { content: ''; position: absolute; left: 52px; top: 70px; bottom: 60px; width: 4px; background-color: var(--timeline-line); }
+        .event-card { margin-bottom: 80px; position: relative; padding-left: 56px; }
+        .event-header { display: flex; align-items: center; margin-bottom: 24px; position: relative; }
+        .event-header::before { content: ''; position: absolute; left: -66px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; background-color: var(--up-color); border: 4px solid var(--bg-color); box-shadow: 0 0 0 4px var(--up-color); }
+        .event-date { font-size: 42px; font-weight: 900; margin-right: 24px; }
+        .event-tag { background-color: var(--up-color); color: #fff; font-size: 24px; padding: 6px 18px; border-radius: 24px; font-weight: 700; }
+        .event-desc { font-size: 28px; color: var(--text-sub); line-height: 1.8; margin-bottom: 40px; text-align: justify; }
+        
+        .chart-box { background-color: var(--card-bg); border-radius: 16px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .chart-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+        .chart-col { display: flex; flex-direction: column; align-items: center; }
+        .chart-top { height: 160px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; width: 100%; }
+        .chart-bottom { height: 160px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; }
+        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; color: #fff; padding: 16px 0; border-bottom: 2px solid rgba(255, 255, 255, 0.4); white-space: nowrap; margin: 8px 0; }
+        .bar-up { width: 36px; background: linear-gradient(180deg, var(--up-color) 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
+        .val-up { color: var(--up-color); font-size: 26px; font-weight: 900; margin-bottom: 12px; }
+        .bar-down { width: 36px; background: linear-gradient(0deg, var(--down-color) 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
+        .val-down { color: var(--down-color); font-size: 26px; font-weight: 900; margin-top: 12px; }
+        
+        /* 底部备注与引导区 */
+        .disclaimer-text { text-align: center; color: #888; font-size: 22px; padding: 0 40px 30px; letter-spacing: 1px; }
+        .footer-cta { background: linear-gradient(180deg, #12182b 0%, #1e2947 100%); padding: 80px 40px; display: flex; align-items: center; justify-content: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .qr-box { width: 220px; height: 220px; background: #fff; padding: 16px; border-radius: 16px; margin-right: 40px; }
+        .qr-box img { width: 100%; height: 100%; object-fit: cover; }
+        .cta-text { font-size: 52px; font-weight: 900; color: #fff; line-height: 1.5; letter-spacing: 2px; }
+        .cta-text span { color: var(--up-color); font-size: 46px; }
+    </style>
+</head>
+<body>
+
+    <div class="left-panel">
+        <div class="panel-header">
+            <h2>📊 行情数据录入后台</h2>
+        </div>
+        
+        <div class="panel-body">
+            <div class="form-group">
+                <label>决议日期</label>
+                <input type="text" id="input-date" placeholder="例如：2026年3月20日">
+            </div>
+            <div class="form-group">
+                <label>标签 (默认：会议要点)</label>
+                <input type="text" id="input-tag" value="会议要点">
+            </div>
+            <div class="form-group">
+                <label>会议文案描述</label>
+                <textarea id="input-desc" placeholder="在这里粘贴美联储的决议要点..."></textarea>
+            </div>
+            
+            <label style="font-size: 13px; font-weight: bold; margin-bottom: 8px; display: block; color: #606266;">商品涨跌幅(%) - 跌带负号，如: -1.56</label>
+            <div class="rates-grid">
+                <div class="rate-item"><label>CBOT大豆</label><input type="number" id="rate-soy" step="0.01"></div>
+                <div class="rate-item"><label>WTI原油</label><input type="number" id="rate-oil" step="0.01"></div>
+                <div class="rate-item"><label>现货黄金</label><input type="number" id="rate-gold" step="0.01"></div>
+                <div class="rate-item"><label>大连铁矿</label><input type="number" id="rate-iron" step="0.01"></div>
+                <div class="rate-item"><label>LME铜</label><input type="number" id="rate-copper" step="0.01"></div>
+            </div>
+
+            <button class="btn-add" onclick="addNewData()">➕ 立即添加到右侧长图</button>
+
+            <div class="data-list-title">长图历史数据管理</div>
+            <div id="admin-data-list"></div>
+        </div>
+
+        <div class="panel-footer">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label for="qr-upload" class="qr-upload-label">🖼️ 点击上传底部二维码</label>
+                <span style="font-size: 12px; color: #999;">预览缩放比例: 65%</span>
+                <input type="file" id="qr-upload" accept="image/png, image/jpeg" style="display: none;" onchange="previewQR(event)">
+            </div>
+            <button class="btn-export" onclick="generatePoster()" id="export-btn">⬇ 导出高清长图 (约1M)</button>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div id="poster-scale-wrapper">
+            <div class="poster-container" id="poster-capture">
+                
+                <div class="header-image">
+                    <img src="./header-bg.jpg" alt="头图">
+                </div>
+
+                <div class="timeline-container" id="dynamic-timeline">
+                    </div>
+
+                <div class="disclaimer-text">
+                    注：以上均为公布当日品种行情日线涨跌
+                </div>
+
+                <div class="footer-cta">
+                    <div class="qr-box">
+                        <img id="qr-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="二维码">
+                    </div>
+                    <div class="cta-text">
+                        扫码下载金十期货APP<br>
+                        <span>重要数据不会错过>></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultData = [
+            {
+                date: "2026年1月29日", tag: "会议要点",
+                desc: "2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",
+                commodities: [{ name: "CBOT大豆", rate: -0.26 }, { name: "WTI原油", rate: 3.17 }, { name: "现货黄金", rate: -0.86 }, { name: "大连铁矿石", rate: 1.98 }, { name: "LME铜", rate: 4.46 }]
+            },
+            {
+                date: "2025年12月11日", tag: "会议要点",
+                desc: "美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",
+                commodities: [{ name: "CBOT大豆", rate: 0.16 }, { name: "WTI原油", rate: -1.76 }, { name: "现货黄金", rate: 1.22 }, { name: "大连铁矿石", rate: -1.56 }, { name: "LME铜", rate: 2.37 }]
+            },
+            {
+                date: "2025年10月30日", tag: "会议要点",
+                desc: "美联储如期降息25个基点，将基准利率目标区间下调至3.75%-4.00%。这是连续第二次降息，以防止招聘放缓演变成更严重的经济问题。鲍威尔做出了异常尖锐的表态，反驳了市场认为12月降息已是板上钉钉的预期，称“远非如此”，并表示由于政府停摆导致数据缺乏，官员面临非常高的经济前景不确定性。",
+                commodities: [{ name: "CBOT大豆", rate: -0.02 }, { name: "WTI原油", rate: -0.12 }, { name: "现货黄金", rate: 2.43 }, { name: "大连铁矿石", rate: -0.25 }, { name: "LME铜", rate: -1.44 }]
+            },
+            {
+                date: "2025年9月18日", tag: "会议要点",
+                desc: "美联储当地时间周三降息25个基点，为九个月来的首次降息。官员们认为，近期劳动力市场的疲软超过了对通胀回落的影响。多数官员预计今年至少还会再降息两次，这意味着美联储将在10月和12月的剩余两次会议上继续降息。鲍威尔称“属于风险平衡的转变”，降息是合适的。",
+                commodities: [{ name: "CBOT大豆", rate: -0.50 }, { name: "WTI原油", rate: -1.03 }, { name: "现货黄金", rate: -0.42 }, { name: "大连铁矿石", rate: -0.56 }, { name: "LME铜", rate: -0.31 }]
+            },
+            {
+                date: "2025年7月31日", tag: "会议要点",
+                desc: "美联储连续第五次会议按兵不动，将联邦基金利率目标区间维持在4.25%-4.5%不变。美联储表示，通胀仍略高，就业稳健，上半年经济增长放缓，不确定性依然较高。鲍威尔重申目前没理由降息，利率决定将更贴合市场预期，对经济活动的描述从“温和步伐扩张”改为“有所放缓”。",
+                commodities: [{ name: "CBOT大豆", rate: -0.23 }, { name: "WTI原油", rate: -1.37 }, { name: "现货黄金", rate: 0.47 }, { name: "大连铁矿石", rate: 0.51 }, { name: "LME铜", rate: 0.27 }]
+            },
+            {
+                date: "2025年6月19日", tag: "会议要点",
+                desc: "美联储将基准利率维持在4.25%-4.50%不变，连续第四次会议按兵不动，符合市场预期。公布的预测显示，官员们对是否能在秋季之前降息持开放态度。点阵图预测凸显了19名官员之间的分歧。其中10位预计今年至少会降息两次，比3月份时的比例要小一些。还有2位预计会降息一次。",
+                commodities: [{ name: "CBOT大豆", rate: -0.12 }, { name: "WTI原油", rate: -0.85 }, { name: "现货黄金", rate: -0.59 }, { name: "大连铁矿石", rate: 0.35 }, { name: "LME铜", rate: -0.32 }]
+            },
+            {
+                date: "2025年5月8日", tag: "会议要点",
+                desc: "美联储以12-0的投票比例通过将基准利率维持在4.25%-4.50%不变，为连续第三次按兵不动；将放慢从当前资产负债表中缩减美国国债和MBS的步伐。失业率已稳定，劳动力市场强劲，但高失业率和高通胀的风险已经上升；经济前景不确定性“进一步增加”；总需求与总供给改善了前景，但经济活动依然以稳健的速度扩张。",
+                commodities: [{ name: "CBOT大豆", rate: 0.53 }, { name: "WTI原油", rate: 2.56 }, { name: "现货黄金", rate: -1.72 }, { name: "大连铁矿石", rate: -2.05 }, { name: "LME铜", rate: 0.73 }]
+            },
+            {
+                date: "2025年3月20日", tag: "会议要点",
+                desc: "美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",
+                commodities: [{ name: "CBOT大豆", rate: 0.62 }, { name: "WTI原油", rate: 1.89 }, { name: "现货黄金", rate: -0.09 }, { name: "大连铁矿石", rate: -0.46 }, { name: "LME铜", rate: -0.88 }]
+            }
+        ];
+
+        let eventsData = JSON.parse(localStorage.getItem('fedPosterData_v2')) || defaultData;
+
+        function updateViews() {
+            localStorage.setItem('fedPosterData_v2', JSON.stringify(eventsData));
+            
+            const listContainer = document.getElementById('admin-data-list');
+            listContainer.innerHTML = '';
+            eventsData.forEach((item, index) => {
+                listContainer.innerHTML += `
+                    <div class="data-item">
+                        <div class="data-item-info">
+                            <strong>${item.date}</strong>
+                            <span>${item.desc.substring(0, 22)}...</span>
+                        </div>
+                        <button class="btn-delete" onclick="deleteData(${index})">删除</button>
+                    </div>
+                `;
+            });
+
+            const posterContainer = document.getElementById('dynamic-timeline');
+            let posterHtml = '';
+            eventsData.forEach(event => {
+                const maxRate = Math.max(...event.commodities.map(c => Math.abs(c.rate)));
+                const MAX_PIXELS = 130; 
+
+                let chartsHtml = '';
+                event.commodities.forEach(c => {
+                    const height = Math.max((Math.abs(c.rate) / maxRate) * MAX_PIXELS, 4);
+                    const isUp = c.rate >= 0;
+                    const sign = isUp ? '+' : '';
+
+                    if (isUp) {
+                        chartsHtml += `<div class="chart-col"><div class="chart-top"><div class="val-up">${sign}${c.rate}%</div><div class="bar-up" style="height: ${height}px;"></div></div><div class="axis-label">${c.name}</div><div class="chart-bottom"></div></div>`;
+                    } else {
+                        chartsHtml += `<div class="chart-col"><div class="chart-top"></div><div class="axis-label">${c.name}</div><div class="chart-bottom"><div class="bar-down" style="height: ${height}px;"></div><div class="val-down">${c.rate}%</div></div></div>`;
+                    }
+                });
+
+                posterHtml += `
+                    <div class="event-card">
+                        <div class="event-header"><div class="event-date">${event.date}</div><div class="event-tag">${event.tag}</div></div>
+                        <div class="event-desc">${event.desc}</div>
+                        <div class="chart-box"><div class="chart-grid">${chartsHtml}</div></div>
+                    </div>`;
+            });
+            posterContainer.innerHTML = posterHtml;
+        }
+
+        function addNewData() {
+            const date = document.getElementById('input-date').value.trim();
+            const desc = document.getElementById('input-desc').value.trim();
+            if (!date || !desc) { alert("日期和描述为必填项！"); return; }
+
+            const newData = {
+                date: date,
+                tag: document.getElementById('input-tag').value.trim() || "会议要点",
+                desc: desc,
+                commodities: [
+                    { name: "CBOT大豆", rate: parseFloat(document.getElementById('rate-soy').value) || 0 },
+                    { name: "WTI原油", rate: parseFloat(document.getElementById('rate-oil').value) || 0 },
+                    { name: "现货黄金", rate: parseFloat(document.getElementById('rate-gold').value) || 0 },
+                    { name: "大连铁矿石", rate: parseFloat(document.getElementById('rate-iron').value) || 0 },
+                    { name: "LME铜", rate: parseFloat(document.getElementById('rate-copper').value) || 0 }
+                ]
+            };
+
+            eventsData.unshift(newData); 
+            updateViews();
+
+            document.getElementById('input-date').value = '';
+            document.getElementById('input-desc').value = '';
+            document.querySelectorAll('.rates-grid input').forEach(input => input.value = '');
+            
+            document.querySelector('.left-panel').scrollTop = 500;
+        }
+
+        function deleteData(index) {
+            if (confirm("确定要移除这条决议数据吗？")) {
+                eventsData.splice(index, 1);
+                updateViews();
+            }
+        }
+
+        function previewQR(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('qr-preview').src = e.target.result;
+                    localStorage.setItem('fedPosterQR_v2', e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function generatePoster() {
+            if (eventsData.length === 0) { alert("没有数据可导出！"); return; }
+            
+            const btn = document.getElementById('export-btn');
+            btn.innerText = '正在合成高清长图...';
+            btn.style.opacity = '0.7';
+            
+            const scaleWrapper = document.getElementById('poster-scale-wrapper');
+            const captureArea = document.getElementById('poster-capture');
+            
+            scaleWrapper.style.transform = 'scale(1)';
+
+            setTimeout(() => {
+                html2canvas(captureArea, {
+                    width: 1242,
+                    scale: 1.5, 
+                    useCORS: true,
+                    backgroundColor: '#12182b'
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/jpeg', 0.75);
+                    const link = document.createElement('a');
+                    const dateStr = new Date().toISOString().split('T')[0];
+                    link.download = `美联储大宗行情_${dateStr}.jpg`;
+                    link.href = imgData;
+                    link.click();
+                    
+                    scaleWrapper.style.transform = 'scale(0.65)';
+                    btn.innerText = '⬇ 导出高清长图 (约1M)';
+                    btn.style.opacity = '1';
+                });
+            }, 100); 
+        }
+
+        const savedQR = localStorage.getItem('fedPosterQR_v2');
+        if (savedQR) { document.getElementById('qr-preview').src = savedQR; }
+        updateViews();
+
+    </script>
+</body>
+</html>
