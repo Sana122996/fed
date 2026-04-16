@@ -70,8 +70,8 @@
             transform: translate(-50%, -50%);
             width: 380px; 
             pointer-events: none; 
-            z-index: 0;
-            opacity: 0.15; /* 透明度控制 */
+            z-index: 10; /* 【关键修复1】层级设为10，强制浮在最上面，绝对不会被盖住 */
+            opacity: 1; /* 【关键修复2】设为1，不再二次削弱，完全使用你图片自带的透明度 */
         }
 
         /* 确保文字和图表在水印上方 */
