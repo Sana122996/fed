@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            var(--bg-color): #12182b;
+            --bg-color: #12182b;
             --card-bg: #1a2238;
             --text-main: #ffffff;
             --text-sub: #a0a5b5;
@@ -62,17 +62,16 @@
         /* 卡片整体相对定位 */
         .event-card { margin-bottom: 80px; position: relative; padding-left: 56px; }
         
-        /* 水印绝对定位样式 */
+        /* 已经去掉了滤镜的全新水印样式 */
         .watermark-img {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 380px; /* 控制水印大小 */
-            pointer-events: none; /* 防止遮挡鼠标点击 */
+            width: 380px; 
+            pointer-events: none; 
             z-index: 0;
-            /* 魔法滤镜：把深色图变白，并设置 10% 的透明度，不会喧宾夺主 */
-            filter: brightness(0) invert(1) opacity(0.1); 
+            opacity: 0.15; /* 透明度控制 */
         }
 
         /* 确保文字和图表在水印上方 */
@@ -220,7 +219,6 @@
         let eventsData = JSON.parse(localStorage.getItem('fedPosterData_v2')) || defaultData;
 
         function updateViews() {
-            // 这里就是数据持久化：一旦更新，立即存入浏览器缓存！
             localStorage.setItem('fedPosterData_v2', JSON.stringify(eventsData));
             
             const listContainer = document.getElementById('admin-data-list');
@@ -256,7 +254,6 @@
                     }
                 });
 
-                // 在这里把水印图片嵌入到了每个卡片 HTML 的最顶层
                 posterHtml += `
                     <div class="event-card">
                         <img class="watermark-img" src="./watermark.png" alt="水印">
