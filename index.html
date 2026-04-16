@@ -8,145 +8,104 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            /* 海报色彩变量 */
-            --bg-color: #12182b;
+            var(--bg-color): #12182b;
             --card-bg: #1a2238;
             --text-main: #ffffff;
             --text-sub: #a0a5b5;
             --up-color: #ff5722;
             --down-color: #4ade80;
             --timeline-line: #2a3454;
-            /* 控制台色彩变量 */
             --admin-bg: #f8f9fb;
             --btn-primary: #1890ff;
             --btn-danger: #ff4d4f;
             --border-color: #e4e7ed;
         }
 
-        /* 页面整体左右布局 */
-        body {
-            margin: 0; padding: 0;
-            font-family: 'Noto Sans SC', 'Source Han Sans CN', 'Source Han Sans SC', sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden; 
-            background-color: #222;
-        }
+        body { margin: 0; padding: 0; font-family: 'Noto Sans SC', 'Source Han Sans CN', 'Source Han Sans SC', sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #222; }
 
         /* ================= 左侧控制台区域 ================= */
-        .left-panel {
-            width: 480px; min-width: 480px;
-            background: #ffffff;
-            height: 100vh;
-            overflow-y: auto; 
-            box-shadow: 2px 0 15px rgba(0,0,0,0.3);
-            z-index: 10;
-            display: flex; flex-direction: column;
-        }
-        
+        .left-panel { width: 480px; min-width: 480px; background: #ffffff; height: 100vh; overflow-y: auto; box-shadow: 2px 0 15px rgba(0,0,0,0.3); z-index: 10; display: flex; flex-direction: column; }
         .panel-header { padding: 20px 25px; background: #fff; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 20; }
         .panel-header h2 { margin: 0; font-size: 20px; color: #333; font-weight: 900; }
-        
         .panel-body { padding: 25px; flex: 1; }
-
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #606266; }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px;
-            font-family: inherit; font-size: 14px; outline: none; box-sizing: border-box; transition: 0.3s;
-        }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; outline: none; box-sizing: border-box; transition: 0.3s; }
         .form-group input:focus, .form-group textarea:focus { border-color: var(--btn-primary); }
         .form-group textarea { height: 100px; resize: vertical; }
-
         .rates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .rate-item { background: var(--admin-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center;}
         .rate-item label { font-size: 12px; margin-bottom: 4px; display: block; color: #666; }
         .rate-item input { width: 90%; text-align: center; font-weight: bold; padding: 6px; }
-
         .btn-add { background: var(--btn-primary); color: #fff; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-add:hover { opacity: 0.9; }
-
         .data-list-title { font-size: 16px; font-weight: bold; margin: 30px 0 15px; color: #333; border-left: 4px solid var(--btn-primary); padding-left: 10px; }
         .data-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 15px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 10px; }
         .data-item-info strong { font-size: 15px; color: #333; display: block; margin-bottom: 4px; }
         .data-item-info span { font-size: 12px; color: #999; }
         .btn-delete { background: var(--btn-danger); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-
         .panel-footer { padding: 20px 25px; background: #fff; border-top: 1px solid var(--border-color); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .btn-export { background: #ff5722; color: #fff; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(255,87,34,0.4); margin-top: 15px; }
         .btn-export:hover { opacity: 0.9; }
         .qr-upload-label { cursor: pointer; color: var(--btn-primary); font-weight: bold; font-size: 14px; text-decoration: underline; display: inline-block; }
 
         /* ================= 右侧实时预览区域 ================= */
-        .right-panel {
-            flex: 1; height: 100vh; overflow-y: auto; 
-            display: flex; flex-direction: column; align-items: center;
-            background-color: #2a2a2a; 
-            padding: 40px 0; box-sizing: border-box;
-            background-image: linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333), linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333);
-            background-size: 20px 20px; background-position: 0 0, 10px 10px; 
-        }
-
-        #poster-scale-wrapper {
-            transform-origin: top center;
-            transform: scale(0.65); 
-            transition: transform 0.3s;
-            margin-bottom: 100px;
-        }
-
-        .poster-container {
-            width: 1242px; background-color: var(--bg-color); color: var(--text-main); 
-            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            padding-bottom: 0;
-        }
-
-        /* 替换后的固定头图样式 */
-        .header-image {
-            width: 100%;
-            display: block;
-        }
-        .header-image img {
-            width: 100%;
-            display: block;
-            object-fit: cover;
-        }
-
-        .timeline-container { padding: 50px 40px 20px; position: relative; }
-        .timeline-container::before { content: ''; position: absolute; left: 52px; top: 70px; bottom: 60px; width: 4px; background-color: var(--timeline-line); }
-        .event-card { margin-bottom: 80px; position: relative; padding-left: 56px; }
-        .event-header { display: flex; align-items: center; margin-bottom: 24px; position: relative; }
-        .event-header::before { content: ''; position: absolute; left: -66px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; background-color: var(--up-color); border: 4px solid var(--bg-color); box-shadow: 0 0 0 4px var(--up-color); }
-        .event-date { font-size: 42px; font-weight: 900; margin-right: 24px; }
-        .event-tag { background-color: var(--up-color); color: #fff; font-size: 24px; padding: 6px 18px; border-radius: 24px; font-weight: 700; }
-        .event-desc { font-size: 28px; color: var(--text-sub); line-height: 1.8; margin-bottom: 40px; text-align: justify; }
+        .right-panel { flex: 1; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background-color: #2a2a2a; padding: 40px 0; box-sizing: border-box; background-image: linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333), linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
+        #poster-scale-wrapper { transform-origin: top center; transform: scale(0.65); transition: transform 0.3s; margin-bottom: 100px; }
+        .poster-container { width: 1242px; background-color: #12182b; color: #ffffff; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); padding-bottom: 0; overflow: hidden; }
         
-        .chart-box { background-color: var(--card-bg); border-radius: 16px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .header-image { width: 100%; display: block; }
+        .header-image img { width: 100%; display: block; object-fit: cover; }
+        .timeline-container { padding: 50px 40px 20px; position: relative; }
+        .timeline-container::before { content: ''; position: absolute; left: 52px; top: 70px; bottom: 60px; width: 4px; background-color: #2a3454; }
+        
+        /* 卡片整体相对定位 */
+        .event-card { margin-bottom: 80px; position: relative; padding-left: 56px; }
+        
+        /* 水印绝对定位样式 */
+        .watermark-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px; /* 控制水印大小 */
+            pointer-events: none; /* 防止遮挡鼠标点击 */
+            z-index: 0;
+            /* 魔法滤镜：把深色图变白，并设置 10% 的透明度，不会喧宾夺主 */
+            filter: brightness(0) invert(1) opacity(0.1); 
+        }
+
+        /* 确保文字和图表在水印上方 */
+        .event-header, .event-desc, .chart-box { position: relative; z-index: 1; }
+
+        .event-header { display: flex; align-items: center; margin-bottom: 24px; }
+        .event-header::before { content: ''; position: absolute; left: -66px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; background-color: #ff5722; border: 4px solid #12182b; box-shadow: 0 0 0 4px #ff5722; }
+        .event-date { font-size: 42px; font-weight: 900; margin-right: 24px; }
+        .event-tag { background-color: #ff5722; color: #fff; font-size: 24px; padding: 6px 18px; border-radius: 24px; font-weight: 700; }
+        .event-desc { font-size: 28px; color: #a0a5b5; line-height: 1.8; margin-bottom: 40px; text-align: justify; }
+        .chart-box { background-color: #1a2238; border-radius: 16px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.05); }
         .chart-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
         .chart-col { display: flex; flex-direction: column; align-items: center; }
         .chart-top { height: 160px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; width: 100%; }
         .chart-bottom { height: 160px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; }
         .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; color: #fff; padding: 16px 0; border-bottom: 2px solid rgba(255, 255, 255, 0.4); white-space: nowrap; margin: 8px 0; }
-        .bar-up { width: 36px; background: linear-gradient(180deg, var(--up-color) 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
-        .val-up { color: var(--up-color); font-size: 26px; font-weight: 900; margin-bottom: 12px; }
-        .bar-down { width: 36px; background: linear-gradient(0deg, var(--down-color) 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
-        .val-down { color: var(--down-color); font-size: 26px; font-weight: 900; margin-top: 12px; }
+        .bar-up { width: 36px; background: linear-gradient(180deg, #ff5722 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
+        .val-up { color: #ff5722; font-size: 26px; font-weight: 900; margin-bottom: 12px; }
+        .bar-down { width: 36px; background: linear-gradient(0deg, #4ade80 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
+        .val-down { color: #4ade80; font-size: 26px; font-weight: 900; margin-top: 12px; }
         
-        /* 底部备注与引导区 */
         .disclaimer-text { text-align: center; color: #888; font-size: 22px; padding: 0 40px 30px; letter-spacing: 1px; }
         .footer-cta { background: linear-gradient(180deg, #12182b 0%, #1e2947 100%); padding: 80px 40px; display: flex; align-items: center; justify-content: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
         .qr-box { width: 220px; height: 220px; background: #fff; padding: 16px; border-radius: 16px; margin-right: 40px; }
         .qr-box img { width: 100%; height: 100%; object-fit: cover; }
         .cta-text { font-size: 52px; font-weight: 900; color: #fff; line-height: 1.5; letter-spacing: 2px; }
-        .cta-text span { color: var(--up-color); font-size: 46px; }
+        .cta-text span { color: #ff5722; font-size: 46px; }
     </style>
 </head>
 <body>
 
     <div class="left-panel">
-        <div class="panel-header">
-            <h2>📊 行情数据录入后台</h2>
-        </div>
-        
+        <div class="panel-header"><h2>📊 行情数据录入后台</h2></div>
         <div class="panel-body">
             <div class="form-group">
                 <label>决议日期</label>
@@ -261,6 +220,7 @@
         let eventsData = JSON.parse(localStorage.getItem('fedPosterData_v2')) || defaultData;
 
         function updateViews() {
+            // 这里就是数据持久化：一旦更新，立即存入浏览器缓存！
             localStorage.setItem('fedPosterData_v2', JSON.stringify(eventsData));
             
             const listContainer = document.getElementById('admin-data-list');
@@ -296,8 +256,10 @@
                     }
                 });
 
+                // 在这里把水印图片嵌入到了每个卡片 HTML 的最顶层
                 posterHtml += `
                     <div class="event-card">
+                        <img class="watermark-img" src="./watermark.png" alt="水印">
                         <div class="event-header"><div class="event-date">${event.date}</div><div class="event-tag">${event.tag}</div></div>
                         <div class="event-desc">${event.desc}</div>
                         <div class="chart-box"><div class="chart-grid">${chartsHtml}</div></div>
