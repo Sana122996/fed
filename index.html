@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美联储大宗商品长图生成器 - 专业分屏版</title>
+    <title>美联储大宗商品长图生成器 - 终极专业版</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -166,29 +166,55 @@
     </div>
 
     <script>
+        // 恢复完整的 8 条默认数据！
         const defaultData = [
             {
                 date: "2026年1月29日", tag: "会议要点",
-                desc: "2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。",
+                desc: "2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",
                 commodities: [{ name: "CBOT大豆", rate: -0.26 }, { name: "WTI原油", rate: 3.17 }, { name: "现货黄金", rate: -0.86 }, { name: "大连铁矿石", rate: 1.98 }, { name: "LME铜", rate: 4.46 }]
             },
             {
                 date: "2025年12月11日", tag: "会议要点",
-                desc: "美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。",
+                desc: "美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",
                 commodities: [{ name: "CBOT大豆", rate: 0.16 }, { name: "WTI原油", rate: -1.76 }, { name: "现货黄金", rate: 1.22 }, { name: "大连铁矿石", rate: -1.56 }, { name: "LME铜", rate: 2.37 }]
+            },
+            {
+                date: "2025年10月30日", tag: "会议要点",
+                desc: "美联储如期降息25个基点，将基准利率目标区间下调至3.75%-4.00%。这是连续第二次降息，以防止招聘放缓演变成更严重的经济问题。鲍威尔做出了异常尖锐的表态，反驳了市场认为12月降息已是板上钉钉的预期，称“远非如此”，并表示由于政府停摆导致数据缺乏，官员面临非常高的经济前景不确定性。",
+                commodities: [{ name: "CBOT大豆", rate: -0.02 }, { name: "WTI原油", rate: -0.12 }, { name: "现货黄金", rate: 2.43 }, { name: "大连铁矿石", rate: -0.25 }, { name: "LME铜", rate: -1.44 }]
+            },
+            {
+                date: "2025年9月18日", tag: "会议要点",
+                desc: "美联储当地时间周三降息25个基点，为九个月来的首次降息。官员们认为，近期劳动力市场的疲软超过了对通胀回落的影响。多数官员预计今年至少还会再降息两次，这意味着美联储将在10月和12月的剩余两次会议上继续降息。鲍威尔称“属于风险平衡的转变”，降息是合适的。",
+                commodities: [{ name: "CBOT大豆", rate: -0.50 }, { name: "WTI原油", rate: -1.03 }, { name: "现货黄金", rate: -0.42 }, { name: "大连铁矿石", rate: -0.56 }, { name: "LME铜", rate: -0.31 }]
+            },
+            {
+                date: "2025年7月31日", tag: "会议要点",
+                desc: "美联储连续第五次会议按兵不动，将联邦基金利率目标区间维持在4.25%-4.5%不变。美联储表示，通胀仍略高，就业稳健，上半年经济增长放缓，不确定性依然较高。鲍威尔重申目前没理由降息，利率决定将更贴合市场预期，对经济活动的描述从“温和步伐扩张”改为“有所放缓”。",
+                commodities: [{ name: "CBOT大豆", rate: -0.23 }, { name: "WTI原油", rate: -1.37 }, { name: "现货黄金", rate: 0.47 }, { name: "大连铁矿石", rate: 0.51 }, { name: "LME铜", rate: 0.27 }]
+            },
+            {
+                date: "2025年6月19日", tag: "会议要点",
+                desc: "美联储将基准利率维持在4.25%-4.50%不变，连续第四次会议按兵不动，符合市场预期。公布的预测显示，官员们对是否能在秋季之前降息持开放态度。点阵图预测凸显了19名官员之间的分歧。其中10位预计今年至少会降息两次，比3月份时的比例要小一些。还有2位预计会降息一次。",
+                commodities: [{ name: "CBOT大豆", rate: -0.12 }, { name: "WTI原油", rate: -0.85 }, { name: "现货黄金", rate: -0.59 }, { name: "大连铁矿石", rate: 0.35 }, { name: "LME铜", rate: -0.32 }]
+            },
+            {
+                date: "2025年5月8日", tag: "会议要点",
+                desc: "美联储以12-0的投票比例通过将基准利率维持在4.25%-4.50%不变，为连续第三次按兵不动；将放慢从当前资产负债表中缩减美国国债和MBS的步伐。失业率已稳定，劳动力市场强劲，但高失业率和高通胀的风险已经上升；经济前景不确定性“进一步增加”；总需求与总供给改善了前景，但经济活动依然以稳健的速度扩张。",
+                commodities: [{ name: "CBOT大豆", rate: 0.53 }, { name: "WTI原油", rate: 2.56 }, { name: "现货黄金", rate: -1.72 }, { name: "大连铁矿石", rate: -2.05 }, { name: "LME铜", rate: 0.73 }]
+            },
+            {
+                date: "2025年3月20日", tag: "会议要点",
+                desc: "美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",
+                commodities: [{ name: "CBOT大豆", rate: 0.62 }, { name: "WTI原油", rate: 1.89 }, { name: "现货黄金", rate: -0.09 }, { name: "大连铁矿石", rate: -0.46 }, { name: "LME铜", rate: -0.88 }]
             }
         ];
 
-        // 初始化数据和全局变量
-        let eventsData = JSON.parse(localStorage.getItem('fedPosterData_v3')) || defaultData;
-        
-        // 品种模板池（如果缓存没有，默认载入这5个）
-        let activeCommodities = JSON.parse(localStorage.getItem('activeCommodities_v3')) || ["CBOT大豆", "WTI原油", "现货黄金", "大连铁矿石", "LME铜"];
-        
-        // 记录当前是否处于编辑模式
+        // 修改为 v4，强制让浏览器拉取刚才补齐的 8 条数据
+        let eventsData = JSON.parse(localStorage.getItem('fedPosterData_v4')) || defaultData;
+        let activeCommodities = JSON.parse(localStorage.getItem('activeCommodities_v4')) || ["CBOT大豆", "WTI原油", "现货黄金", "大连铁矿石", "LME铜"];
         let editIndex = -1;
 
-        // 【功能1】渲染动态的品种输入框
         function renderCommodityInputs(values = {}) {
             const container = document.getElementById('rates-grid-container');
             let html = '';
@@ -204,12 +230,10 @@
                 `;
             });
             
-            // 加上添加品种的虚线按钮
             html += `<div class="add-type-btn" onclick="addCommodity()">+ 添加新品种</div>`;
             container.innerHTML = html;
         }
 
-        // 获取当前输入框临时填写的值，防止重绘时数据丢失
         function getCurrentInputValues() {
             let vals = {};
             activeCommodities.forEach((name, i) => {
@@ -219,33 +243,29 @@
             return vals;
         }
 
-        // 添加新品种
         function addCommodity() {
             const newName = prompt("请输入新品种名称 (例如：沪银)：");
             if (newName && newName.trim()) {
                 const vals = getCurrentInputValues();
                 activeCommodities.push(newName.trim());
-                localStorage.setItem('activeCommodities_v3', JSON.stringify(activeCommodities));
+                localStorage.setItem('activeCommodities_v4', JSON.stringify(activeCommodities));
                 renderCommodityInputs(vals);
             }
         }
 
-        // 移除品种
         function removeCommodity(index) {
             const name = activeCommodities[index];
             if (confirm(`确定不再录入【${name}】的涨跌幅吗？`)) {
                 const vals = getCurrentInputValues();
                 activeCommodities.splice(index, 1);
-                localStorage.setItem('activeCommodities_v3', JSON.stringify(activeCommodities));
+                localStorage.setItem('activeCommodities_v4', JSON.stringify(activeCommodities));
                 renderCommodityInputs(vals);
             }
         }
 
-        // 【功能2】全局界面渲染 (长图 + 历史列表)
         function updateViews() {
-            localStorage.setItem('fedPosterData_v3', JSON.stringify(eventsData));
+            localStorage.setItem('fedPosterData_v4', JSON.stringify(eventsData));
             
-            // 1. 渲染左侧列表 (带编辑和删除)
             const listContainer = document.getElementById('admin-data-list');
             listContainer.innerHTML = '';
             eventsData.forEach((item, index) => {
@@ -263,7 +283,6 @@
                 `;
             });
 
-            // 2. 渲染右侧长图
             const posterContainer = document.getElementById('dynamic-timeline');
             let posterHtml = '';
             eventsData.forEach(event => {
@@ -283,7 +302,6 @@
                     }
                 });
 
-                // ★ 精华：这里的 grid-template-columns 变为动态，品种个数决定图表几等分
                 posterHtml += `
                     <div class="event-card">
                         <img class="watermark-img" src="./watermark.png" alt="水印">
@@ -299,7 +317,6 @@
             posterContainer.innerHTML = posterHtml;
         }
 
-        // 【功能3】提交数据 (包含新增与保存编辑)
         function submitData() {
             const date = document.getElementById('input-date').value.trim();
             const desc = document.getElementById('input-desc').value.trim();
@@ -318,57 +335,46 @@
             };
 
             if (editIndex === -1) {
-                // 新增模式
                 eventsData.unshift(newData); 
             } else {
-                // 编辑保存模式
                 eventsData[editIndex] = newData;
-                cancelEdit(); // 退出编辑模式
+                cancelEdit(); 
             }
 
             updateViews();
 
-            // 如果不是在编辑模式，提交后自动清空表单
             if (editIndex === -1) {
                 document.getElementById('input-date').value = '';
                 document.getElementById('input-desc').value = '';
-                renderCommodityInputs(); // 清空输入框数值
-                // 滚动到列表查看
+                renderCommodityInputs(); 
                 document.querySelector('.left-panel').scrollTo({ top: 600, behavior: 'smooth' });
             }
         }
 
-        // 【功能4】进入编辑模式
         function startEdit(index) {
             editIndex = index;
             const item = eventsData[index];
             
-            // 填入基础信息
             document.getElementById('input-date').value = item.date;
             document.getElementById('input-tag').value = item.tag;
             document.getElementById('input-desc').value = item.desc;
             
-            // 将表单的品种模板，临时同步为该历史记录自带的品种
             activeCommodities = item.commodities.map(c => c.name);
-            localStorage.setItem('activeCommodities_v3', JSON.stringify(activeCommodities));
+            localStorage.setItem('activeCommodities_v4', JSON.stringify(activeCommodities));
 
-            // 回填数值
             let vals = {};
             item.commodities.forEach(c => vals[c.name] = c.rate);
             renderCommodityInputs(vals);
 
-            // 切换 UI 状态
             document.getElementById('panel-title').innerText = "✏️ 正在修改历史数据...";
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.innerText = "💾 保存修改";
             submitBtn.style.background = "var(--btn-success)";
             document.getElementById('cancel-edit-btn').style.display = "block";
 
-            // 滚动到最顶部方便编辑
             document.querySelector('.left-panel').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 取消编辑模式，恢复新增状态
         function cancelEdit() {
             editIndex = -1;
             document.getElementById('panel-title').innerText = "📊 行情数据录入后台";
@@ -379,10 +385,9 @@
             
             document.getElementById('input-date').value = '';
             document.getElementById('input-desc').value = '';
-            renderCommodityInputs(); // 清空数值
+            renderCommodityInputs(); 
         }
 
-        // 删除单条历史记录
         function deleteData(index) {
             if (confirm(`确定要移除【${eventsData[index].date}】的决议数据吗？`)) {
                 eventsData.splice(index, 1);
@@ -390,7 +395,6 @@
             }
         }
 
-        // 导出长图核心逻辑
         function generatePoster() {
             if (eventsData.length === 0) { alert("没有数据可导出！"); return; }
             const btn = document.getElementById('export-btn');
@@ -414,7 +418,6 @@
             }, 100); 
         }
 
-        // 页面初始化：渲染品种输入框和全局界面
         renderCommodityInputs();
         updateViews();
 
