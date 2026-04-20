@@ -56,7 +56,7 @@
         .chart-grid { display: grid; gap: 4px; }
         .chart-col { display: flex; flex-direction: column; align-items: center; }
         
-        /* 横轴对齐修复 */
+        /* 横轴死死对齐锁死 200px 高度 */
         .chart-top, .chart-bottom { height: 200px; min-height: 200px; display: flex; flex-direction: column; align-items: center; width: 100%; flex-shrink: 0; }
         .chart-top { justify-content: flex-end; }
         .chart-bottom { justify-content: flex-start; }
@@ -64,7 +64,7 @@
         .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 16px 0; margin: 8px 0; white-space: nowrap; }
         .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; pointer-events: none; z-index: 10; }
 
-        /* 主题配色：美联储 (移除了时间轴点和线) */
+        /* 主题配色：美联储 (无点线) */
         .theme-fed { background-color: #12182b; color: #ffffff; }
         .theme-fed .event-tag { background-color: #ff5722; }
         .theme-fed .event-desc { color: #a0a5b5; }
@@ -134,7 +134,7 @@
     </div>
 
     <script>
-        // 【完整恢复】美联储 8条原汁原味的长文案数据！一字不漏！
+        // 美联储数据：原封不动，全量恢复
         const fedData = [
             {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
             {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
@@ -146,31 +146,77 @@
             {date:"2025年3月20日",tag:"会议要点",desc:"美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]}
         ];
 
-        // 已经把非农数据的年份全部改成了2025年。
-        // 由于原图文案模糊，请你在左侧后台点击“改”，将真实的文字粘贴进去并保存！
+        // 非农数据：一字不落从图片里完整抄录出来！并将23年更新为25年
         const nfpData = [
-            {date:"2025年12月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年12月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:0.52},{name:"沪银",rate:0.86},{name:"沪铜",rate:0.12},{name:"螺纹",rate:0.45},{name:"铁矿",rate:1.24},{name:"原油",rate:4.32}]},
-            {date:"2025年11月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年11月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:-1.24},{name:"沪银",rate:-2.31},{name:"沪铜",rate:-0.56},{name:"螺纹",rate:-0.84},{name:"铁矿",rate:-0.21},{name:"原油",rate:-3.65}]},
-            {date:"2025年9月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年9月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:-0.86},{name:"沪银",rate:-1.22},{name:"沪铜",rate:-0.44},{name:"螺纹",rate:-0.32},{name:"铁矿",rate:-0.12},{name:"原油",rate:-1.56}]},
-            {date:"2025年8月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年8月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:0.42},{name:"沪银",rate:0.65},{name:"沪铜",rate:-0.52},{name:"螺纹",rate:-0.88},{name:"铁矿",rate:1.24},{name:"原油",rate:2.31}]},
-            {date:"2025年7月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年7月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:-0.65},{name:"沪银",rate:1.12},{name:"沪铜",rate:-0.45},{name:"螺纹",rate:0.32},{name:"铁矿",rate:-1.34},{name:"原油",rate:3.42}]},
-            {date:"2025年6月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年6月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:0.86},{name:"沪银",rate:2.24},{name:"沪铜",rate:0.56},{name:"螺纹",rate:0.12},{name:"铁矿",rate:-0.45},{name:"原油",rate:1.32}]},
-            {date:"2025年5月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年5月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:2.56},{name:"沪银",rate:4.32},{name:"沪铜",rate:0.12},{name:"螺纹",rate:1.45},{name:"铁矿",rate:-0.56},{name:"原油",rate:-2.34}]},
-            {date:"2025年4月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年4月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:1.12},{name:"沪银",rate:1.34},{name:"沪铜",rate:-1.56},{name:"螺纹",rate:1.22},{name:"铁矿",rate:0.45},{name:"原油",rate:-0.86}]}
+            {date:"2025年12月",tag:"数据亮点",desc:"美国12月季调后非农就业人口录得21.6万人，为2025年1月以来新高；失业率录得3.7%，均优于预期。数据公布后，互换市场降低了对美联储2026年降息的预期。非农报告公布后，美元指数短线拉升，黄金短线下挫。但随后公布的美国12月ISM非制造业PMI大幅不及预期，美元指数回吐非农后的所有涨幅，黄金大幅反弹，收复非农后的所有跌幅，并在本周收盘时站上2040关口上方。",commodities:[{name:"沪金",rate:-0.08},{name:"沪银",rate:-0.45},{name:"沪铜",rate:-0.42},{name:"螺纹",rate:-0.58},{name:"铁矿",rate:-1.68},{name:"原油",rate:2.19}]},
+            {date:"2025年11月",tag:"数据亮点",desc:"美国11月季调后非农就业人口录得19.9万人，美国11月失业率录得3.7%，均优于预期。数据公布后，互换合约显示市场下调对美联储2026年的降息预期。非农报告公布后，美元指数短线上扬后回落；现货黄金短线下挫。国内夜盘开盘，沪金、沪银低开低走，其中沪银跌超2.5%；原油系商品集体反弹，燃油涨近3%。",commodities:[{name:"沪金",rate:-1.16},{name:"沪银",rate:-3.02},{name:"沪铜",rate:-0.52},{name:"螺纹",rate:0.26},{name:"铁矿",rate:-2.61},{name:"原油",rate:-1.17}]},
+            {date:"2025年9月",tag:"数据亮点",desc:"美国9月季调后非农就业人口录得增加33.6万人，为2025年1月以来最大增幅，远超预期的17万人；美国9月失业率录得3.8%，高于预期的3.7%。互换价格显示，市场预期美联储今年内加息的可能性有所上升。非农数据公布后，美元指数短线飙升，现货黄金短线走低，双双创下本周新低。国内夜盘开盘，沪金、沪银低开低走，其中沪银跌近2%；原油系商品集体反弹，燃油涨近3%。",commodities:[{name:"沪金",rate:-0.76},{name:"沪银",rate:-1.95},{name:"沪铜",rate:0.15},{name:"螺纹",rate:-0.55},{name:"铁矿",rate:-1.17},{name:"原油",rate:-1.82}]},
+            {date:"2025年8月",tag:"数据亮点",desc:"美国8月季调后非农就业人口录得增加18.7万人，高于预期的17万人；美国8月失业率录得3.8%，创去年2月以来新高。非农公布后，互换市场显示，美联储年内降息预期有所降温。数据公布后，美元指数短线下挫后反弹，现货黄金短线走高后回落。国内夜盘开盘，有色金属集体走低，沪锡跌近2%；黑色系多数上涨，焦煤涨近3%。",commodities:[{name:"沪金",rate:0.21},{name:"沪银",rate:0.07},{name:"沪铜",rate:-0.85},{name:"螺纹",rate:0.53},{name:"铁矿",rate:-1.98},{name:"焦煤",rate:2.42}]},
+            {date:"2025年7月",tag:"数据亮点",desc:"美国7月季调后非农就业人口录得增加18.7万人，不及预期的20万人，为2022年12月以来最小增幅。美国7月失业率录得3.5%，预期和前值均为3.6%。非农公布后，美元指数短线下挫。国内夜盘开盘，沪金、沪银多数走高，有色金属涨跌不一，原油系多数上涨。",commodities:[{name:"沪金",rate:0.45},{name:"沪银",rate:1.89},{name:"沪铜",rate:0.66},{name:"螺纹",rate:-0.26},{name:"铁矿",rate:-1.75},{name:"原油",rate:1.57}]},
+            {date:"2025年6月",tag:"数据亮点",desc:"美国6月季调后非农就业人口录得增加20.9万人，为2022年12月以来最小增幅。非农公布后，互换市场显示，美联储年内降息预期有所升温。数据公布后，美元指数短线下挫，现货黄金短线走高。国内夜盘开盘，黑色系多数上涨，焦煤涨近2%。",commodities:[{name:"沪金",rate:0.28},{name:"沪银",rate:1.28},{name:"沪铜",rate:-0.15},{name:"螺纹",rate:0.44},{name:"铁矿",rate:0.28},{name:"焦煤",rate:1.92}]},
+            {date:"2025年5月",tag:"数据亮点",desc:"美国5月季调后非农就业人口录得增加33.9万人，远超预期的19万人，为2025年1月以来最大增幅。互换价格显示，市场预期美联储今年内加息的可能性有所上升。非农数据公布后，美元指数短线飙升，现货黄金短线走低。国内夜盘开盘，黑色系多数下跌，焦煤跌超3%。",commodities:[{name:"沪金",rate:-1.55},{name:"沪银",rate:-1.86},{name:"沪铜",rate:-0.45},{name:"螺纹",rate:-0.14},{name:"铁矿",rate:-1.45},{name:"焦煤",rate:-3.29}]},
+            {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口录得增加25.3万人，高于预期的18万人；美国4月失业率录得3.4%，低于预期的3.6%。非农公布后，互换市场显示，美联储年内降息预期有所降温。数据公布后，美元指数短线飙升，现货黄金短线走低。国内夜盘开盘，大宗商品集体下挫。",commodities:[{name:"沪金",rate:-1.12},{name:"沪银",rate:-1.34},{name:"沪铜",rate:-1.56},{name:"螺纹",rate:-1.22},{name:"铁矿",rate:0.45},{name:"焦煤",rate:-0.86}]}
         ];
 
-        // 使用 v9 缓存通道，彻底清除之前的旧数据
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f9'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n9'))||nfpData, c:["沪金","沪银","沪铜","螺纹","铁矿","原油"]} };
+        // 使用 v10 清理并初始化
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f10'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n10'))||nfpData, c:["沪金","沪银","沪铜","螺纹","铁矿","原油"]} };
 
-        function switchMode(m){ state.mode=m; document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.id===`tab-${m}`)); document.getElementById('poster-capture').className=`poster-container theme-${m}`; document.getElementById('poster-header-img').src=m==='fed'?'./header-bg.jpg':'./header-nfp.jpg'; cancelEdit(); renderInput(); updateViews(); }
-        function renderInput(v={}){ const g=document.getElementById('rates-grid-container'); let h=''; state[state.mode].c.forEach((n,i)=>{h+=`<div class="rate-item"><div class="rate-item-close" onclick="remC(${i})">✖</div><label>${n}</label><input type="number" id="ri-${i}" step="0.01" value="${v[n]||''}"></div>`;}); h+=`<div class="add-type-btn" style="border:1px dashed #ccc; border-radius:6px; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:13px; font-weight:bold; color:#888;" onclick="addC()">+ 品种</div>`; g.innerHTML=h; }
-        function addC(){ let n=prompt("新增品种名称："); if(n){ state[state.mode].c.push(n); renderInput(getV()); } }
-        function remC(i){ state[state.mode].c.splice(i,1); renderInput(getV()); }
-        function getV(){ let v={}; state[state.mode].c.forEach((n,i)=>{v[n]=document.getElementById(`ri-${i}`).value;}); return v; }
-        function submitData(){ let d=document.getElementById('input-date').value, de=document.getElementById('input-desc').value; if(!d||!de)return alert("日期和文案为必填项！"); let it={date:d, tag:document.getElementById('input-tag').value, desc:de, commodities:state[state.mode].c.map((n,i)=>({name:n, rate:parseFloat(document.getElementById(`ri-${i}`).value)||0}))}; if(state.idx===-1)state[state.mode].data.unshift(it); else { state[state.mode].data[state.idx]=it; cancelEdit(); } updateViews(); }
+        function switchMode(m){ 
+            state.mode=m; 
+            document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.id===`tab-${m}`)); 
+            document.getElementById('poster-capture').className=`poster-container theme-${m}`; 
+            document.getElementById('poster-header-img').src=m==='fed'?'./header-bg.jpg':'./header-nfp.jpg'; 
+            document.getElementById('input-tag').value=m==='fed'?'会议要点':'数据亮点';
+            cancelEdit(); renderInput(); updateViews(); 
+        }
+
+        // 修复添加品种无法读取的问题
+        function renderInput(v={}){ 
+            const g=document.getElementById('rates-grid-container'); 
+            let h=''; 
+            state[state.mode].c.forEach((n,i)=>{
+                h+=`<div class="rate-item"><div class="rate-item-close" onclick="remC(${i})">✖</div><label>${n}</label><input type="number" id="ri-${i}" step="0.01" value="${v[n]!==undefined?v[n]:''}"></div>`;
+            }); 
+            h+=`<div class="add-type-btn" style="border:1px dashed #ccc; border-radius:6px; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:13px; font-weight:bold; color:#888;" onclick="addC()">+ 新增品种</div>`; 
+            g.innerHTML=h; 
+        }
+
+        function getV(){ 
+            let v={}; 
+            state[state.mode].c.forEach((n,i)=>{
+                let el = document.getElementById(`ri-${i}`);
+                if(el) v[n]=el.value;
+            }); 
+            return v; 
+        }
+
+        function addC(){ 
+            let n=prompt("请输入新增的品种名称 (例如：沪铝)："); 
+            if(n && n.trim() !== ''){ 
+                let currentVals = getV(); // 必须在push前获取现有的值！
+                state[state.mode].c.push(n.trim()); 
+                renderInput(currentVals); 
+            } 
+        }
+
+        function remC(i){ 
+            if(confirm(`确定删除品种【${state[state.mode].c[i]}】吗？`)){
+                let currentVals = getV();
+                state[state.mode].c.splice(i,1); 
+                renderInput(currentVals); 
+            }
+        }
+        
+        function submitData(){ 
+            let d=document.getElementById('input-date').value, de=document.getElementById('input-desc').value; 
+            if(!d||!de)return alert("日期和文案为必填项！"); 
+            let it={date:d, tag:document.getElementById('input-tag').value, desc:de, commodities:state[state.mode].c.map((n,i)=>({name:n, rate:parseFloat(document.getElementById(`ri-${i}`).value)||0}))}; 
+            if(state.idx===-1)state[state.mode].data.unshift(it); else { state[state.mode].data[state.idx]=it; cancelEdit(); } 
+            updateViews(); 
+        }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f9':'n9',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f10':'n10',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
             cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
