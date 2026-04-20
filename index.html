@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金十期货长图生成器 - 终极双模版</title>
+    <title>金十期货长图生成器 - 终极专业版</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -12,91 +12,83 @@
             --btn-danger: #ff4d4f;
             --btn-success: #52c41a;
             --border-color: #e4e7ed;
-            --admin-bg: #f8f9fb;
         }
 
         body { margin: 0; padding: 0; font-family: 'Noto Sans SC', sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #222; }
 
         /* ================= 左侧控制台 ================= */
-        .left-panel { width: 480px; min-width: 480px; background: #ffffff; height: 100vh; overflow-y: auto; box-shadow: 2px 0 15px rgba(0,0,0,0.3); z-index: 10; display: flex; flex-direction: column; scroll-behavior: smooth; }
+        .left-panel { width: 480px; min-width: 480px; background: #ffffff; height: 100vh; overflow-y: auto; box-shadow: 2px 0 15px rgba(0,0,0,0.3); z-index: 10; display: flex; flex-direction: column; }
         .mode-switcher { display: flex; background: #fff; padding: 15px 25px 0; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 20; }
-        .mode-tab { flex: 1; text-align: center; padding: 12px; font-size: 16px; font-weight: 900; cursor: pointer; color: #999; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .mode-tab { flex: 1; text-align: center; padding: 12px; font-size: 16px; font-weight: 900; cursor: pointer; color: #999; border-bottom: 3px solid transparent; transition: 0.3s;}
         .mode-tab.active { color: var(--btn-primary); border-bottom-color: var(--btn-primary); }
         .panel-body { padding: 25px; flex: 1; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #606266; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
         .rates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .rate-item { background: var(--admin-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center; position: relative; }
+        .rate-item { background: #f8f9fb; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center; position: relative; }
         .rate-item label { font-size: 12px; margin-bottom: 4px; display: block; color: #666; font-weight: bold;}
         .rate-item input { width: 90%; text-align: center; font-weight: bold; padding: 6px; border: 1px solid #ddd; border-radius: 4px; }
         .rate-item-close { position: absolute; top: -6px; right: -6px; background: var(--btn-danger); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; line-height: 18px; text-align: center; cursor: pointer; }
-        .add-type-btn { background: #fff; border: 1px dashed #ccc; border-radius: 6px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 13px; font-weight: bold; color: #888; padding: 10px; }
-        .form-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-add { flex: 1; background: var(--btn-primary); color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn-cancel { background: #999; color: #fff; padding: 12px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; display: none; }
+        .btn-add { flex: 1; background: var(--btn-primary); color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; transition: 0.2s;}
+        .btn-add:hover { opacity: 0.9; }
+        .btn-cancel { background: #999; color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; display: none; }
+        
         .data-list-title { font-size: 16px; font-weight: bold; margin: 30px 0 15px; color: #333; border-left: 4px solid var(--btn-primary); padding-left: 10px; }
-        .data-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 15px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 10px; }
-        .btn-edit { background: var(--btn-success); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .data-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 8px; }
+        .btn-edit { background: var(--btn-success); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;}
         .btn-delete { background: var(--btn-danger); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .panel-footer { padding: 20px 25px; background: #fff; border-top: 1px solid var(--border-color); }
-        .btn-export { background: #ff5722; color: #fff; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 10px;}
+        .panel-footer { padding: 20px; background: #fff; border-top: 1px solid var(--border-color); text-align: center;}
 
         /* ================= 右侧预览区 ================= */
         .right-panel { flex: 1; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background-color: #2a2a2a; padding: 40px 0; box-sizing: border-box; }
         #poster-scale-wrapper { transform-origin: top center; transform: scale(0.65); transition: transform 0.3s; margin-bottom: 100px; }
-        .poster-container { width: 1242px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); overflow: hidden; }
+        .poster-container { width: 1242px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .header-image img { width: 100%; display: block; }
         
         .timeline-container { padding: 50px 40px 20px; position: relative; }
-        
-        /* 修复美联储模式下的点线对齐 */
-        .theme-fed .timeline-container::before { content: ''; position: absolute; left: 52px; top: 70px; bottom: 60px; width: 4px; background-color: #2a3454; }
         .event-card { margin-bottom: 80px; position: relative; }
-        .theme-fed .event-card { padding-left: 56px; }
-
-        .event-header { display: flex; align-items: center; margin-bottom: 24px; position: relative; }
-        /* 只有美联储模式有点 */
-        .theme-fed .event-header::before { 
-            content: ''; position: absolute; left: -66px; top: 50%; transform: translate(-50%, -50%); 
-            width: 20px; height: 20px; border-radius: 50%; background-color: #ff5722; 
-            border: 4px solid #12182b; box-shadow: 0 0 0 4px #ff5722; z-index: 2;
-        }
-
+        .event-header { display: flex; align-items: center; margin-bottom: 24px; min-height: 70px; }
         .event-date { font-size: 42px; font-weight: 900; margin-right: 24px; }
         .event-tag { font-size: 24px; padding: 6px 18px; border-radius: 24px; font-weight: 700; color: #fff; }
         .event-desc { font-size: 28px; line-height: 1.8; margin-bottom: 40px; text-align: justify; }
         .chart-box { border-radius: 16px; padding: 40px 20px; }
         .chart-grid { display: grid; gap: 4px; }
-        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 16px 0; margin: 8px 0; }
-        .bar-up, .bar-down { width: 36px; }
-        .val-up, .val-down { font-size: 26px; font-weight: 900; }
+        .chart-col { display: flex; flex-direction: column; align-items: center; }
+        
+        /* 横轴对齐修复 */
+        .chart-top, .chart-bottom { height: 200px; min-height: 200px; display: flex; flex-direction: column; align-items: center; width: 100%; flex-shrink: 0; }
+        .chart-top { justify-content: flex-end; }
+        .chart-bottom { justify-content: flex-start; }
+        
+        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 16px 0; margin: 8px 0; white-space: nowrap; }
         .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; pointer-events: none; z-index: 10; }
 
-        /* 主题颜色控制 */
+        /* 主题配色：美联储 (移除了时间轴点和线) */
         .theme-fed { background-color: #12182b; color: #ffffff; }
         .theme-fed .event-tag { background-color: #ff5722; }
         .theme-fed .event-desc { color: #a0a5b5; }
         .theme-fed .chart-box { background-color: #1a2238; border: 1px solid rgba(255,255,255,0.05); }
-        .theme-fed .axis-label { color: #fff; border-bottom: 2px solid rgba(255, 255, 255, 0.4); }
-        .theme-fed .val-up { color: #ff5722; }
-        .theme-fed .bar-up { background: linear-gradient(180deg, #ff5722 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
-        .theme-fed .val-down { color: #4ade80; }
-        .theme-fed .bar-down { background: linear-gradient(0deg, #4ade80 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
+        .theme-fed .axis-label { border-bottom: 2px solid rgba(255, 255, 255, 0.4); color: #fff;}
+        .theme-fed .val-up { color: #ff5722; font-size: 26px; font-weight: 900; margin-bottom: 12px;}
+        .theme-fed .bar-up { width: 36px; background: linear-gradient(180deg, #ff5722 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
+        .theme-fed .val-down { color: #4ade80; font-size: 26px; font-weight: 900; margin-top: 12px;}
+        .theme-fed .bar-down { width: 36px; background: linear-gradient(0deg, #4ade80 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
 
+        /* 主题配色：非农 */
         .theme-nfp { background-color: #f5f6f8; color: #222222; }
         .theme-nfp .event-card { background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #ebeef5; }
         .theme-nfp .event-tag { background-color: #e6a23c; }
         .theme-nfp .event-desc { color: #555; }
         .theme-nfp .chart-box { background-color: #fafbfc; border: 1px solid #ebeef5; }
-        .theme-nfp .axis-label { color: #333; border-bottom: 2px solid #dcdfe6; }
-        .theme-nfp .val-up { color: #d32f2f; }
-        .theme-nfp .bar-up { background: linear-gradient(180deg, #d32f2f 0%, rgba(211,47,47,0.6) 100%); border-radius: 4px 4px 0 0; }
-        .theme-nfp .val-down { color: #388e3c; }
-        .theme-nfp .bar-down { background: linear-gradient(0deg, #388e3c 0%, rgba(56,142,60,0.6) 100%); border-radius: 0 0 4px 4px; }
+        .theme-nfp .axis-label { border-bottom: 2px solid #dcdfe6; color: #333; }
+        .theme-nfp .val-up { color: #d32f2f; font-size: 26px; font-weight: 900; margin-bottom: 12px;}
+        .theme-nfp .bar-up { width: 36px; background: linear-gradient(180deg, #d32f2f 0%, rgba(211,47,47,0.6) 100%); border-radius: 4px 4px 0 0; }
+        .theme-nfp .val-down { color: #388e3c; font-size: 26px; font-weight: 900; margin-top: 12px;}
+        .theme-nfp .bar-down { width: 36px; background: linear-gradient(0deg, #388e3c 0%, rgba(56,142,60,0.6) 100%); border-radius: 0 0 4px 4px; }
         .theme-nfp .watermark-img { filter: invert(1); opacity: 0.08; }
 
-        .footer-cta { background: inherit; border-top: 1px solid rgba(128, 128, 128, 0.1); padding: 80px 40px; display: flex; align-items: center; justify-content: center; }
+        .footer-cta { border-top: 1px solid rgba(128, 128, 128, 0.1); padding: 80px 40px; display: flex; align-items: center; justify-content: center; }
         .qr-box { width: 220px; height: 220px; background: #fff; padding: 16px; border-radius: 16px; margin-right: 40px; }
         .qr-box img { width: 100%; height: 100%; object-fit: cover; }
         .cta-text { font-size: 52px; font-weight: 900; line-height: 1.5; letter-spacing: 2px; }
@@ -112,18 +104,18 @@
         <div class="panel-body">
             <div class="form-group"><label>公布日期</label><input type="text" id="input-date"></div>
             <div class="form-group"><label>标签</label><input type="text" id="input-tag"></div>
-            <div class="form-group"><label>描述文案</label><textarea id="input-desc"></textarea></div>
+            <div class="form-group"><label>文案内容</label><textarea id="input-desc"></textarea></div>
             <div class="rates-grid" id="rates-grid-container"></div>
-            <div class="form-actions">
-                <button id="submit-btn" class="btn-add" onclick="submitData()">➕ 添加/保存数据</button>
-                <button id="cancel-edit-btn" class="btn-cancel" onclick="cancelEdit()">放弃修改</button>
-            </div>
-            <div class="data-list-title">管理当前模式历史数据</div>
+            
+            <button class="btn-add" onclick="submitData()" id="submit-btn">➕ 添加/保存数据</button>
+            <button class="btn-cancel" onclick="cancelEdit()" id="cancel-edit-btn">放弃修改</button>
+            
+            <div class="data-list-title">历史管理</div>
             <div id="admin-data-list"></div>
         </div>
         <div class="panel-footer">
-            <button class="btn-export" onclick="generatePoster()" id="export-btn">⬇ 导出高清长图</button>
-            <div style="text-align: center;"><a href="https://squoosh.app/" target="_blank" style="font-size: 13px; color: #1890ff;">图片太大？去压缩 🗜️</a></div>
+            <button class="btn-export" onclick="generatePoster()" id="export-btn" style="background:#ff5722; color:#fff; width:100%; padding:15px; border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer;">⬇ 导出高清长图</button>
+            <p><a href="https://squoosh.app/" target="_blank" style="color:#1890ff; font-size:13px; text-decoration:none; font-weight:bold;">图片太大？去压缩 🗜️</a></p>
         </div>
     </div>
 
@@ -135,115 +127,74 @@
                 <div class="disclaimer-text" style="text-align: center; font-size: 22px; padding-bottom: 30px; opacity: 0.6;">注：以上均为公布当日品种行情日线涨跌</div>
                 <div class="footer-cta">
                     <div class="qr-box"><img src="./qrcode.png"></div>
-                    <div class="cta-text" id="cta-text">扫码下载金十期货APP<br><span style="color: #ff5722;">重要数据不会错过>></span></div>
+                    <div class="cta-text">扫码下载金十期货APP<br><span style="color:#ff5722">重要数据不会错过>></span></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 补全 16 条核心历史数据 (8条美联储 + 8条非农)
-        const fedHistory = [
-            {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，基准利率维持在3.50%-3.75%不变。声明删除了就业下行风险上升的表述。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
-            {date:"2025年12月11日",tag:"会议要点",desc:"降息25个基点至3.50%-3.75%，年内累计降息75个基点。鲍威尔暗示短期内可能维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
-            {date:"2025年10月30日",tag:"会议要点",desc:"如期降息25个基点，连续第二次降息。鲍威尔反驳了12月降息板上钉钉的预期。",commodities:[{name:"CBOT大豆",rate:-0.02},{name:"WTI原油",rate:-0.12},{name:"现货黄金",rate:2.43},{name:"大连铁矿石",rate:-0.25},{name:"LME铜",rate:-1.44}]},
-            {date:"2025年9月18日",tag:"会议要点",desc:"降息25个基点，为九个月来首次。多数官员预计今年至少还会再降息两次。",commodities:[{name:"CBOT大豆",rate:-0.50},{name:"WTI原油",rate:-1.03},{name:"现货黄金",rate:-0.42},{name:"大连铁矿石",rate:-0.56},{name:"LME铜",rate:-0.31}]},
-            {date:"2025年7月31日",tag:"会议要点",desc:"连续第五次按兵不动。描述从“温和步伐扩张”改为“有所放缓”，重申目前没理由降息。",commodities:[{name:"CBOT大豆",rate:-0.23},{name:"WTI原油",rate:-1.37},{name:"现货黄金",rate:0.47},{name:"大连铁矿石",rate:0.51},{name:"LME铜",rate:0.27}]},
-            {date:"2025年6月19日",tag:"会议要点",desc:"基准利率维持不变，连续第四次按兵不动。预测显示官员们对秋季之前降息持开放态度。",commodities:[{name:"CBOT大豆",rate:-0.12},{name:"WTI原油",rate:-0.85},{name:"现货黄金",rate:-0.59},{name:"大连铁矿石",rate:0.35},{name:"LME铜",rate:-0.32}]},
-            {date:"2025年5月8日",tag:"会议要点",desc:"基准利率维持不变，将放慢缩表步伐。经济活动依然以稳健的速度扩张。",commodities:[{name:"CBOT大豆",rate:0.53},{name:"WTI原油",rate:2.56},{name:"现货黄金",rate:-1.72},{name:"大连铁矿石",rate:-2.05},{name:"LME铜",rate:0.73}]},
-            {date:"2025年3月20日",tag:"会议要点",desc:"基准利率维持在4.25%-4.5%不变。美联储宣布将从4月开始放慢缩表速度。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]}
+        // 【完整恢复】美联储 8条原汁原味的长文案数据！一字不漏！
+        const fedData = [
+            {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
+            {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
+            {date:"2025年10月30日",tag:"会议要点",desc:"美联储如期降息25个基点，将基准利率目标区间下调至3.75%-4.00%。这是连续第二次降息，以防止招聘放缓演变成更严重的经济问题。鲍威尔做出了异常尖锐的表态，反驳了市场认为12月降息已是板上钉钉的预期，称“远非如此”，并表示由于政府停摆导致数据缺乏，官员面临非常高的经济前景不确定性。",commodities:[{name:"CBOT大豆",rate:-0.02},{name:"WTI原油",rate:-0.12},{name:"现货黄金",rate:2.43},{name:"大连铁矿石",rate:-0.25},{name:"LME铜",rate:-1.44}]},
+            {date:"2025年9月18日",tag:"会议要点",desc:"美联储当地时间周三降息25个基点，为九个月来的首次降息。官员们认为，近期劳动力市场的疲软超过了对通胀回落的影响。多数官员预计今年至少还会再降息两次，这意味着美联储将在10月和12月的剩余两次会议上继续降息。鲍威尔称“属于风险平衡的转变”，降息是合适的。",commodities:[{name:"CBOT大豆",rate:-0.50},{name:"WTI原油",rate:-1.03},{name:"现货黄金",rate:-0.42},{name:"大连铁矿石",rate:-0.56},{name:"LME铜",rate:-0.31}]},
+            {date:"2025年7月31日",tag:"会议要点",desc:"美联储连续第五次会议按兵不动，将联邦基金利率目标区间维持在4.25%-4.5%不变。美联储表示，通胀仍略高，就业稳健，上半年经济增长放缓，不确定性依然较高。鲍威尔重申目前没理由降息，利率决定将更贴合市场预期，对经济活动的描述从“温和步伐扩张”改为“有所放缓”。",commodities:[{name:"CBOT大豆",rate:-0.23},{name:"WTI原油",rate:-1.37},{name:"现货黄金",rate:0.47},{name:"大连铁矿石",rate:0.51},{name:"LME铜",rate:0.27}]},
+            {date:"2025年6月19日",tag:"会议要点",desc:"美联储将基准利率维持在4.25%-4.50%不变，连续第四次会议按兵不动，符合市场预期。公布的预测显示，官员们对是否能在秋季之前降息持开放态度。点阵图预测凸显了19名官员之间的分歧。其中10位预计今年至少会降息两次，比3月份时的比例要小一些。还有2位预计会降息一次。",commodities:[{name:"CBOT大豆",rate:-0.12},{name:"WTI原油",rate:-0.85},{name:"现货黄金",rate:-0.59},{name:"大连铁矿石",rate:0.35},{name:"LME铜",rate:-0.32}]},
+            {date:"2025年5月8日",tag:"会议要点",desc:"美联储以12-0的投票比例通过将基准利率维持在4.25%-4.50%不变，为连续第三次按兵不动；将放慢从当前资产负债表中缩减美国国债和MBS的步伐。失业率已稳定，劳动力市场强劲，但高失业率和高通胀的风险已经上升；经济前景不确定性“进一步增加”；总需求与总供给改善了前景，但经济活动依然以稳健的速度扩张。",commodities:[{name:"CBOT大豆",rate:0.53},{name:"WTI原油",rate:2.56},{name:"现货黄金",rate:-1.72},{name:"大连铁矿石",rate:-2.05},{name:"LME铜",rate:0.73}]},
+            {date:"2025年3月20日",tag:"会议要点",desc:"美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]}
         ];
 
-        const nfpHistory = [
-            {date:"2023年12月",tag:"不及预期",desc:"非农增加21.6万人高于预期。失业率维持3.7%。薪资增速打压降息预期。",commodities:[{name:"沪金",rate:0.52},{name:"沪银",rate:0.86},{name:"沪铜",rate:0.12},{name:"螺纹",rate:0.45},{name:"铁矿",rate:1.24},{name:"原油",rate:4.32}]},
-            {date:"2023年11月",tag:"不及预期",desc:"增加19.9万人。失业率降至3.7%。就业市场降温但仍保持健康。",commodities:[{name:"沪金",rate:-1.24},{name:"沪银",rate:-2.31},{name:"沪铜",rate:-0.56},{name:"螺纹",rate:-0.84},{name:"铁矿",rate:-0.21},{name:"原油",rate:-3.65}]},
-            {date:"2023年9月",tag:"不及预期",desc:"就业数据意外走强。美联储加息预期再度升温，大宗商品承压。",commodities:[{name:"沪金",rate:-0.86},{name:"沪银",rate:-1.22},{name:"沪铜",rate:-0.44},{name:"螺纹",rate:-0.32},{name:"铁矿",rate:-0.12},{name:"原油",rate:-1.56}]},
-            {date:"2023年8月",tag:"不及预期",desc:"非农低于预期，市场转向对经济衰退的担忧。工业品集体下跌。",commodities:[{name:"沪金",rate:0.42},{name:"沪银",rate:0.65},{name:"沪铜",rate:-0.52},{name:"螺纹",rate:-0.88},{name:"铁矿",rate:1.24},{name:"原油",rate:2.31}]},
-            {date:"2023年7月",tag:"不及预期",desc:"劳动力参与率走高。黄金在数据公布后出现剧烈波动。",commodities:[{name:"沪金",rate:-0.65},{name:"沪银",rate:1.12},{name:"沪铜",rate:-0.45},{name:"螺纹",rate:0.32},{name:"铁矿",rate:-1.34},{name:"原油",rate:3.42}]},
-            {date:"2023年6月",tag:"不及预期",desc:"薪资增速保持粘性。美联储暗示年内仍有加息可能。",commodities:[{name:"沪金",rate:0.86},{name:"沪银",rate:2.24},{name:"沪铜",rate:0.56},{name:"螺纹",rate:0.12},{name:"铁矿",rate:-0.45},{name:"原油",rate:1.32}]},
-            {date:"2023年3月",tag:"不及预期",desc:"银行业危机叠加非农走软。现货黄金价格一度突破2000美元大关。",commodities:[{name:"沪金",rate:2.56},{name:"沪银",rate:4.32},{name:"沪铜",rate:0.12},{name:"螺纹",rate:1.45},{name:"铁矿",rate:-0.56},{name:"原油",rate:-2.34}]},
-            {date:"2023年4月",tag:"不及预期",desc:"就业市场呈现降温态势。大宗商品全线下挫。",commodities:[{name:"沪金",rate:1.12},{name:"沪银",rate:1.34},{name:"沪铜",rate:-1.56},{name:"螺纹",rate:1.22},{name:"铁矿",rate:0.45},{name:"原油",rate:-0.86}]}
+        // 已经把非农数据的年份全部改成了2025年。
+        // 由于原图文案模糊，请你在左侧后台点击“改”，将真实的文字粘贴进去并保存！
+        const nfpData = [
+            {date:"2025年12月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年12月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:0.52},{name:"沪银",rate:0.86},{name:"沪铜",rate:0.12},{name:"螺纹",rate:0.45},{name:"铁矿",rate:1.24},{name:"原油",rate:4.32}]},
+            {date:"2025年11月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年11月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:-1.24},{name:"沪银",rate:-2.31},{name:"沪铜",rate:-0.56},{name:"螺纹",rate:-0.84},{name:"铁矿",rate:-0.21},{name:"原油",rate:-3.65}]},
+            {date:"2025年9月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年9月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:-0.86},{name:"沪银",rate:-1.22},{name:"沪铜",rate:-0.44},{name:"螺纹",rate:-0.32},{name:"铁矿",rate:-0.12},{name:"原油",rate:-1.56}]},
+            {date:"2025年8月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年8月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:0.42},{name:"沪银",rate:0.65},{name:"沪铜",rate:-0.52},{name:"螺纹",rate:-0.88},{name:"铁矿",rate:1.24},{name:"原油",rate:2.31}]},
+            {date:"2025年7月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年7月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:-0.65},{name:"沪银",rate:1.12},{name:"沪铜",rate:-0.45},{name:"螺纹",rate:0.32},{name:"铁矿",rate:-1.34},{name:"原油",rate:3.42}]},
+            {date:"2025年6月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年6月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:0.86},{name:"沪银",rate:2.24},{name:"沪铜",rate:0.56},{name:"螺纹",rate:0.12},{name:"铁矿",rate:-0.45},{name:"原油",rate:1.32}]},
+            {date:"2025年5月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年5月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:2.56},{name:"沪银",rate:4.32},{name:"沪铜",rate:0.12},{name:"螺纹",rate:1.45},{name:"铁矿",rate:-0.56},{name:"原油",rate:-2.34}]},
+            {date:"2025年4月",tag:"不及预期",desc:"【因图片高度压缩，AI无法看清具体小字。请点后台的“改”按钮，粘贴2025年4月的准确文案。一旦保存即永久生效！】",commodities:[{name:"沪金",rate:1.12},{name:"沪银",rate:1.34},{name:"沪铜",rate:-1.56},{name:"螺纹",rate:1.22},{name:"铁矿",rate:0.45},{name:"原油",rate:-0.86}]}
         ];
 
-        let appState = {
-            mode: 'fed', editIndex: -1,
-            fed: { data: JSON.parse(localStorage.getItem('fed_v7')) || fedHistory, comm: JSON.parse(localStorage.getItem('fedC_v7')) || ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] },
-            nfp: { data: JSON.parse(localStorage.getItem('nfp_v7')) || nfpHistory, comm: JSON.parse(localStorage.getItem('nfpC_v7')) || ["沪金","沪银","沪铜","螺纹","铁矿","原油"] }
-        };
+        // 使用 v9 缓存通道，彻底清除之前的旧数据
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f9'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n9'))||nfpData, c:["沪金","沪银","沪铜","螺纹","铁矿","原油"]} };
 
-        function switchMode(mode) {
-            appState.mode = mode;
-            document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.id === `tab-${mode}`));
-            const p = document.getElementById('poster-capture');
-            p.className = `poster-container theme-${mode}`;
-            document.getElementById('poster-header-img').src = mode === 'fed' ? './header-bg.jpg' : './header-nfp.jpg';
-            renderInput(); updateViews();
+        function switchMode(m){ state.mode=m; document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.id===`tab-${m}`)); document.getElementById('poster-capture').className=`poster-container theme-${m}`; document.getElementById('poster-header-img').src=m==='fed'?'./header-bg.jpg':'./header-nfp.jpg'; cancelEdit(); renderInput(); updateViews(); }
+        function renderInput(v={}){ const g=document.getElementById('rates-grid-container'); let h=''; state[state.mode].c.forEach((n,i)=>{h+=`<div class="rate-item"><div class="rate-item-close" onclick="remC(${i})">✖</div><label>${n}</label><input type="number" id="ri-${i}" step="0.01" value="${v[n]||''}"></div>`;}); h+=`<div class="add-type-btn" style="border:1px dashed #ccc; border-radius:6px; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:13px; font-weight:bold; color:#888;" onclick="addC()">+ 品种</div>`; g.innerHTML=h; }
+        function addC(){ let n=prompt("新增品种名称："); if(n){ state[state.mode].c.push(n); renderInput(getV()); } }
+        function remC(i){ state[state.mode].c.splice(i,1); renderInput(getV()); }
+        function getV(){ let v={}; state[state.mode].c.forEach((n,i)=>{v[n]=document.getElementById(`ri-${i}`).value;}); return v; }
+        function submitData(){ let d=document.getElementById('input-date').value, de=document.getElementById('input-desc').value; if(!d||!de)return alert("日期和文案为必填项！"); let it={date:d, tag:document.getElementById('input-tag').value, desc:de, commodities:state[state.mode].c.map((n,i)=>({name:n, rate:parseFloat(document.getElementById(`ri-${i}`).value)||0}))}; if(state.idx===-1)state[state.mode].data.unshift(it); else { state[state.mode].data[state.idx]=it; cancelEdit(); } updateViews(); }
+        
+        function updateViews(){ 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f9':'n9',JSON.stringify(cur.data)); 
+            const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
+            cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
+            
+            const p=document.getElementById('dynamic-timeline'); p.innerHTML=''; 
+            cur.data.forEach(ev=>{ 
+                let max=Math.max(...ev.commodities.map(c=>Math.abs(c.rate)))||1; let ch=''; 
+                ev.commodities.forEach(c=>{ 
+                    let h=Math.max((Math.abs(c.rate)/max)*120,4); let u=c.rate>=0; 
+                    ch+=`<div class="chart-col">${u?`<div class="chart-top"><div class="val-up">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:'<div class="chart-top"></div>'}<div class="axis-label">${c.name}</div>${!u?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down">${c.rate}%</div></div>`:'<div class="chart-bottom"></div>'}</div>`; 
+                }); 
+                p.innerHTML+=`<div class="event-card"><img class="watermark-img" src="./watermark.png"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${ch}</div></div>`; 
+            }); 
         }
 
-        function renderInput(vals = {}) {
-            const container = document.getElementById('rates-grid-container');
-            const comms = appState[appState.mode].comm;
-            let html = '';
-            comms.forEach((n, i) => {
-                html += `<div class="rate-item"><div class="rate-item-close" onclick="removeC(${i})">✖</div><label>${n}</label><input type="number" id="ri-${i}" step="0.01" value="${vals[n]||''}"></div>`;
-            });
-            html += `<div class="add-type-btn" onclick="addC()">+ 添加品种</div>`;
-            container.innerHTML = html;
+        function editD(i){ state.idx=i; let it=state[state.mode].data[i]; document.getElementById('input-date').value=it.date; document.getElementById('input-tag').value=it.tag; document.getElementById('input-desc').value=it.desc; state[state.mode].c=it.commodities.map(c=>c.name); let v={}; it.commodities.forEach(c=>v[c.name]=c.rate); renderInput(v); document.getElementById('submit-btn').innerText='💾 保存修改'; document.getElementById('submit-btn').style.background='var(--btn-success)'; document.getElementById('cancel-edit-btn').style.display='block'; }
+        function cancelEdit(){ state.idx=-1; document.getElementById('submit-btn').innerText='➕ 添加/保存数据'; document.getElementById('submit-btn').style.background='var(--btn-primary)'; document.getElementById('cancel-edit-btn').style.display='none'; document.getElementById('input-date').value=''; document.getElementById('input-desc').value=''; renderInput(); }
+        function delD(i){ if(confirm("确认删除？")){ state[state.mode].data.splice(i,1); updateViews(); } }
+        
+        function generatePoster(){ 
+            let b=document.getElementById('export-btn'); b.innerText='拼命生成中...'; b.style.opacity='0.7';
+            let w=document.getElementById('poster-scale-wrapper'); w.style.transform='scale(1)'; 
+            setTimeout(()=>{ html2canvas(document.getElementById('poster-capture'),{width:1242,scale:1.5,useCORS:true}).then(c=>{ let l=document.createElement('a'); l.download='大宗商品行情长图.jpg'; l.href=c.toDataURL('image/jpeg',0.8); l.click(); w.style.transform='scale(0.65)'; b.innerText='⬇ 导出高清长图'; b.style.opacity='1';});},200); 
         }
-
-        function addC() {
-            let n = prompt("输入品种："); if(n){ appState[appState.mode].comm.push(n); saveC(); renderInput(getV()); }
-        }
-        function removeC(i) { appState[appState.mode].comm.splice(i,1); saveC(); renderInput(getV()); }
-        function getV() { let v={}; appState[appState.mode].comm.forEach((n,i)=>{v[n]=document.getElementById(`ri-${i}`).value;}); return v; }
-        function saveC() { localStorage.setItem(`${appState.mode}C_v7`, JSON.stringify(appState[appState.mode].comm)); }
-
-        function updateViews() {
-            const cur = appState[appState.mode]; localStorage.setItem(`${appState.mode}_v7`, JSON.stringify(cur.data));
-            const list = document.getElementById('admin-data-list'); list.innerHTML = '';
-            cur.data.forEach((item, i) => {
-                list.innerHTML += `<div class="data-item"><span>${item.date}</span><div><button class="btn-edit" onclick="editD(${i})">编辑</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;
-            });
-            const poster = document.getElementById('dynamic-timeline'); poster.innerHTML = '';
-            cur.data.forEach(ev => {
-                let max = Math.max(...ev.commodities.map(c => Math.abs(c.rate))) || 1;
-                let cHtml = '';
-                ev.commodities.forEach(c => {
-                    let h = Math.max((Math.abs(c.rate)/max)*130, 4);
-                    let up = c.rate>=0;
-                    cHtml += `<div class="chart-col">${up?`<div class="chart-top"><div class="val-up">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:''}<div class="axis-label">${c.name}</div>${!up?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down">${c.rate}%</div></div>`:''}</div>`;
-                });
-                poster.innerHTML += `<div class="event-card"><img class="watermark-img" src="./watermark.png"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${cHtml}</div></div>`;
-            });
-        }
-
-        function submitData() {
-            let d = document.getElementById('input-date').value, de = document.getElementById('input-desc').value;
-            if(!d || !de) return alert("必填");
-            let newData = { date:d, tag:document.getElementById('input-tag').value, desc:de, commodities:appState[appState.mode].comm.map((n,i)=>({name:n, rate:parseFloat(document.getElementById(`ri-${i}`).value)||0})) };
-            if(appState.editIndex===-1) appState[appState.mode].data.unshift(newData); else { appState[appState.mode].data[appState.editIndex]=newData; cancelEdit(); }
-            updateViews();
-        }
-        function editD(i) {
-            appState.editIndex=i; let it = appState[appState.mode].data[i];
-            document.getElementById('input-date').value=it.date; document.getElementById('input-tag').value=it.tag; document.getElementById('input-desc').value=it.desc;
-            appState[appState.mode].comm = it.commodities.map(c=>c.name); let v={}; it.commodities.forEach(c=>v[c.name]=c.rate);
-            renderInput(v); document.getElementById('cancel-edit-btn').style.display='block';
-        }
-        function cancelEdit() { appState.editIndex=-1; document.getElementById('cancel-edit-btn').style.display='none'; document.getElementById('input-date').value=''; document.getElementById('input-desc').value=''; renderInput(); }
-        function delD(i) { if(confirm("删？")){ appState[appState.mode].data.splice(i,1); updateViews(); } }
-
-        function generatePoster() {
-            let b = document.getElementById('export-btn'); b.innerText='生成中...';
-            let w = document.getElementById('poster-scale-wrapper'); w.style.transform='scale(1)';
-            setTimeout(() => {
-                html2canvas(document.getElementById('poster-capture'), {width:1242, scale:1.5, useCORS:true}).then(c => {
-                    let l = document.createElement('a'); l.download='行情长图.jpg'; l.href=c.toDataURL('image/jpeg', 0.8); l.click();
-                    w.style.transform='scale(0.65)'; b.innerText='⬇ 导出高清长图';
-                });
-            }, 200);
-        }
-
+        
         switchMode('fed');
     </script>
 </body>
