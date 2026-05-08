@@ -77,6 +77,9 @@
 
         /* 主题配色：非农 */
         .theme-nfp { background-color: #f5f6f8; color: #222222; }
+        /* 🔥单独修复非农模式下头图和卡片的巨大间距🔥 */
+        .theme-nfp .timeline-container { padding-top: 10px; }
+        
         .theme-nfp .event-card { background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #ebeef5; }
         .theme-nfp .event-tag { background-color: #e6a23c; }
         .theme-nfp .event-desc { color: #555; }
@@ -134,7 +137,6 @@
     </div>
 
     <script>
-        // 美联储数据：原封不动，全量恢复
         const fedData = [
             {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
             {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
@@ -146,8 +148,11 @@
             {date:"2025年3月20日",tag:"会议要点",desc:"美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]}
         ];
 
-        // 非农数据：一字不落从图片里完整抄录出来！并将23年更新为25年
+        // 已经追加了2026年1月、2月、3月的三条数据在最前面
         const nfpData = [
+            {date:"2026年3月",tag:"数据亮点",desc:"美国3月季调后非农就业人口增加17.8万人，远超6万人的市场预期，创2024年12月以来最高水平，较上月就业“负增长”的情况大幅改善。1月份非农新增就业人数从增加12.6万人上修至增加16万人；2月份非农新增就业人数从减少9.2万人下修至减少13.3万人。修正后，1月和2月新增就业人数合计较修正前低0.7万人。市场定价显示，美联储2026年降息押注下降。",commodities:[{name:"沪金",rate:0.90},{name:"沪银",rate:1.26},{name:"沪铝",rate:-0.24},{name:"沪铜",rate:0.39}]},
+            {date:"2026年2月",tag:"数据亮点",desc:"美国2月季调后非农就业人口减少9.2万人，继2025年10月之后再次录得负值，市场预期增加5.9万人。12月份非农新增就业人数从4.8万人修正至-1.7万人；1月份非农新增就业人数从13万人修正至12.6万人。经修正后，12月和1月新增就业人数合计较修正前减少6.9万人非农数据很可能向美联储施压，使其考虑恢复降息。眼下的情况与许多官员此前描述的“趋于稳定”完全不符。",commodities:[{name:"沪金",rate:-0.97},{name:"沪银",rate:0.47},{name:"沪铝",rate:-0.40},{name:"沪铜",rate:-0.03},{name:"伦铜",rate:0.08},{name:"伦铝",rate:4.21},{name:"WTI原油",rate:15.72},{name:"CBOT大豆",rate:1.93},{name:"现货黄金",rate:1.84},{name:"现货白银",rate:2.52}]},
+            {date:"2026年1月",tag:"数据亮点",desc:"美国1月季调后非农就业人口增加13万人，大幅高于市场预期中值7万人，创2025年4月以来最大增幅。美国1月失业率录得4.3%，略低于市场预期的4.4%，创2025年8月以来新低。11月份非农新增就业人数从5.6万人修正至4.1万人；12月份非农新增就业人数从5.0万人修正至4.8万人。修正后，11月和12月新增就业人数合计较修正前低1.7万人。交易员们完全定价美联储7月降息，此前预期为6月。",commodities:[{name:"沪金",rate:0.82},{name:"沪银",rate:3.25},{name:"沪铝",rate:0.62},{name:"沪铜",rate:0.61},{name:"伦铜",rate:1.06},{name:"伦铝",rate:0.39},{name:"WTI原油",rate:1.07},{name:"CBOT大豆",rate:0.02},{name:"现货黄金",rate:1.22},{name:"现货白银",rate:4.34}]},
             {date:"2025年12月",tag:"数据亮点",desc:"美国12月季调后非农就业人口录得21.6万人，为2025年1月以来新高；失业率录得3.7%，均优于预期。数据公布后，互换市场降低了对美联储2026年降息的预期。非农报告公布后，美元指数短线拉升，黄金短线下挫。但随后公布的美国12月ISM非制造业PMI大幅不及预期，美元指数回吐非农后的所有涨幅，黄金大幅反弹，收复非农后的所有跌幅，并在本周收盘时站上2040关口上方。",commodities:[{name:"沪金",rate:-0.08},{name:"沪银",rate:-0.45},{name:"沪铜",rate:-0.42},{name:"螺纹",rate:-0.58},{name:"铁矿",rate:-1.68},{name:"原油",rate:2.19}]},
             {date:"2025年11月",tag:"数据亮点",desc:"美国11月季调后非农就业人口录得19.9万人，美国11月失业率录得3.7%，均优于预期。数据公布后，互换合约显示市场下调对美联储2026年的降息预期。非农报告公布后，美元指数短线上扬后回落；现货黄金短线下挫。国内夜盘开盘，沪金、沪银低开低走，其中沪银跌超2.5%；原油系商品集体反弹，燃油涨近3%。",commodities:[{name:"沪金",rate:-1.16},{name:"沪银",rate:-3.02},{name:"沪铜",rate:-0.52},{name:"螺纹",rate:0.26},{name:"铁矿",rate:-2.61},{name:"原油",rate:-1.17}]},
             {date:"2025年9月",tag:"数据亮点",desc:"美国9月季调后非农就业人口录得增加33.6万人，为2025年1月以来最大增幅，远超预期的17万人；美国9月失业率录得3.8%，高于预期的3.7%。互换价格显示，市场预期美联储今年内加息的可能性有所上升。非农数据公布后，美元指数短线飙升，现货黄金短线走低，双双创下本周新低。国内夜盘开盘，沪金、沪银低开低走，其中沪银跌近2%；原油系商品集体反弹，燃油涨近3%。",commodities:[{name:"沪金",rate:-0.76},{name:"沪银",rate:-1.95},{name:"沪铜",rate:0.15},{name:"螺纹",rate:-0.55},{name:"铁矿",rate:-1.17},{name:"原油",rate:-1.82}]},
@@ -158,8 +163,8 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口录得增加25.3万人，高于预期的18万人；美国4月失业率录得3.4%，低于预期的3.6%。非农公布后，互换市场显示，美联储年内降息预期有所降温。数据公布后，美元指数短线飙升，现货黄金短线走低。国内夜盘开盘，大宗商品集体下挫。",commodities:[{name:"沪金",rate:-1.12},{name:"沪银",rate:-1.34},{name:"沪铜",rate:-1.56},{name:"螺纹",rate:-1.22},{name:"铁矿",rate:0.45},{name:"焦煤",rate:-0.86}]}
         ];
 
-        // 使用 v10 清理并初始化
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f10'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n10'))||nfpData, c:["沪金","沪银","沪铜","螺纹","铁矿","原油"]} };
+        // 使用 v11 彻底清理并初始化（把非农默认品种改成了你截图上的 10 个）
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f11'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n11'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
 
         function switchMode(m){ 
             state.mode=m; 
@@ -170,7 +175,6 @@
             cancelEdit(); renderInput(); updateViews(); 
         }
 
-        // 修复添加品种无法读取的问题
         function renderInput(v={}){ 
             const g=document.getElementById('rates-grid-container'); 
             let h=''; 
@@ -193,7 +197,7 @@
         function addC(){ 
             let n=prompt("请输入新增的品种名称 (例如：沪铝)："); 
             if(n && n.trim() !== ''){ 
-                let currentVals = getV(); // 必须在push前获取现有的值！
+                let currentVals = getV();
                 state[state.mode].c.push(n.trim()); 
                 renderInput(currentVals); 
             } 
@@ -216,16 +220,27 @@
         }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f10':'n10',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f11':'n11',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
             cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
             const p=document.getElementById('dynamic-timeline'); p.innerHTML=''; 
             cur.data.forEach(ev=>{ 
                 let max=Math.max(...ev.commodities.map(c=>Math.abs(c.rate)))||1; let ch=''; 
+                
+                // 🔥智能修复：如果品种数量超过5个，字号变小并允许换行，绝不拥挤！
+                let isCrowded = ev.commodities.length >= 6;
+                let valFs = isCrowded ? '16px' : '26px';
+                let labFs = isCrowded ? '16px' : '26px';
+                let labWrap = isCrowded ? 'white-space: normal; line-height: 1.2;' : 'white-space: nowrap;';
+
                 ev.commodities.forEach(c=>{ 
                     let h=Math.max((Math.abs(c.rate)/max)*120,4); let u=c.rate>=0; 
-                    ch+=`<div class="chart-col">${u?`<div class="chart-top"><div class="val-up">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:'<div class="chart-top"></div>'}<div class="axis-label">${c.name}</div>${!u?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down">${c.rate}%</div></div>`:'<div class="chart-bottom"></div>'}</div>`; 
+                    ch+=`<div class="chart-col">
+                            ${u?`<div class="chart-top"><div class="val-up" style="font-size:${valFs}; margin-bottom: 6px;">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:'<div class="chart-top"></div>'}
+                            <div class="axis-label" style="font-size:${labFs}; ${labWrap}">${c.name}</div>
+                            ${!u?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down" style="font-size:${valFs}; margin-top: 6px;">${c.rate}%</div></div>`:'<div class="chart-bottom"></div>'}
+                        </div>`; 
                 }); 
                 p.innerHTML+=`<div class="event-card"><img class="watermark-img" src="./watermark.png"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${ch}</div></div>`; 
             }); 
