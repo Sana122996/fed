@@ -53,15 +53,15 @@
         .event-tag { font-size: 24px; padding: 6px 18px; border-radius: 24px; font-weight: 700; color: #fff; }
         .event-desc { font-size: 28px; line-height: 1.8; margin-bottom: 40px; text-align: justify; }
         .chart-box { border-radius: 16px; padding: 40px 20px; }
-        .chart-grid { display: grid; gap: 4px; }
-        .chart-col { display: flex; flex-direction: column; align-items: center; }
+        .chart-grid { display: grid; gap: 4px; align-items: stretch; } /* 确保高度一致 */
+        .chart-col { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* 横轴死死对齐锁死 200px 高度 */
-        .chart-top, .chart-bottom { height: 200px; min-height: 200px; display: flex; flex-direction: column; align-items: center; width: 100%; flex-shrink: 0; }
-        .chart-top { justify-content: flex-end; }
-        .chart-bottom { justify-content: flex-start; }
+        /* 彻底修复横轴对齐：通过Flex布局确保标签强制居中对齐 */
+        .chart-top, .chart-bottom { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
+        .chart-top { justify-content: flex-end; padding-bottom: 10px; } /* 为数字留出空间 */
+        .chart-bottom { justify-content: flex-start; padding-top: 10px; } /* 为数字留出空间 */
         
-        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 16px 0; margin: 8px 0; white-space: nowrap; }
+        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 16px 0; margin: 0; white-space: nowrap; flex-shrink: 0; }
         .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; pointer-events: none; z-index: 10; }
 
         /* 主题配色：美联储 (无点线) */
@@ -77,7 +77,9 @@
 
         /* 主题配色：非农 */
         .theme-nfp { background-color: #f5f6f8; color: #222222; }
-        .theme-nfp .timeline-container { padding-top: 10px; }
+        /* 缩小非农头图和第一张卡片的间距 */
+        .theme-nfp .timeline-container { padding-top: 0; }
+        
         .theme-nfp .event-card { background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #ebeef5; }
         .theme-nfp .event-tag { background-color: #e6a23c; }
         .theme-nfp .event-desc { color: #555; }
@@ -136,6 +138,8 @@
 
     <script>
         const fedData = [
+            // 新增 2026 年 5 月美联储数据
+            {date:"2026年5月2日",tag:"会议要点",desc:"美联储5月利率决议出炉，基准利率维持在3.50%-3.75%不变。声明显示，“在考虑对联邦基金利率目标区间进行任何调整时，委员会将仔细评估即将公布的数据、不断变化的前景和风险平衡。”此外，“近几个月来，实现其2%的通胀目标的进展停滞。”“过去一年通胀放缓，但仍处于高位。”另外，美联储宣布将从6月开始放慢缩表速度，且放慢缩表的速度比市场预期的要快。",commodities:[{name:"CBOT大豆",rate:1.37},{name:"WTI原油",rate:-3.62},{name:"现货黄金",rate:1.52},{name:"大连铁矿石",rate:-1.03},{name:"LME铜",rate:0.22}]},
             {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
             {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
             {date:"2025年10月30日",tag:"会议要点",desc:"美联储如期降息25个基点，将基准利率目标区间下调至3.75%-4.00%。这是连续第二次降息，以防止招聘放缓演变成更严重的经济问题。鲍威尔做出了异常尖锐的表态，反驳了市场认为12月降息已是板上钉钉的预期，称“远非如此”，并表示由于政府停摆导致数据缺乏，官员面临非常高的经济前景不确定性。",commodities:[{name:"CBOT大豆",rate:-0.02},{name:"WTI原油",rate:-0.12},{name:"现货黄金",rate:2.43},{name:"大连铁矿石",rate:-0.25},{name:"LME铜",rate:-1.44}]},
@@ -146,7 +150,6 @@
             {date:"2025年3月20日",tag:"会议要点",desc:"美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]}
         ];
 
-        // 提取并完美还原的所有最新非农数据
         const nfpData = [
             {date:"2026年3月",tag:"数据亮点",desc:"美国3月季调后非农就业人口增加17.8万人，远超6万人的市场预期，创2024年12月以来最高水平，较上月就业“负增长”的情况大幅改善。1月份非农新增就业人数从增加12.6万人上修至增加16万人；2月份非农新增就业人数从减少9.2万人下修至减少13.3万人。修正后，1月和2月新增就业人数合计较修正前低0.7万人。市场定价显示，美联储2026年降息押注下降。",commodities:[{name:"沪金",rate:0.90},{name:"沪银",rate:1.26},{name:"沪铝",rate:-0.24},{name:"沪铜",rate:0.39}]},
             {date:"2026年2月",tag:"数据亮点",desc:"美国2月季调后非农就业人口减少9.2万人，继2025年10月之后再次录得负值，市场预期增加5.9万人。12月份非农新增就业人数从4.8万人修正至-1.7万人；1月份非农新增就业人数从13万人修正至12.6万人。经修正后，12月和1月新增就业人数合计较修正前减少6.9万人非农数据很可能向美联储施压，使其考虑恢复降息。眼下的情况与许多官员此前描述的“趋于稳定”完全不符。",commodities:[{name:"沪金",rate:-0.97},{name:"沪银",rate:0.47},{name:"沪铝",rate:-0.40},{name:"沪铜",rate:-0.03},{name:"伦铜",rate:0.08},{name:"伦铝",rate:4.21},{name:"WTI原油",rate:15.72},{name:"CBOT大豆",rate:1.93},{name:"现货黄金",rate:1.84},{name:"现货白银",rate:2.52}]},
@@ -161,8 +164,7 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口增加17.7万人，高于预期的13万。美国4月失业率保持稳于4.2%，符合市场预期。交易员削减美联储降息押注，预计今年美联储降息次数接近四次。",commodities:[{name:"伦铜",rate:1.20},{name:"伦铝",rate:1.06},{name:"WTI原油",rate:-1.02},{name:"CBOT大豆",rate:0.76},{name:"现货黄金",rate:0.09},{name:"现货白银",rate:-1.24}]}
         ];
 
-        // 升级至 v13 缓存，确保浏览器完全同步最新数据
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f13'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n13'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f14'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n14'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
 
         function switchMode(m){ 
             state.mode=m; 
@@ -218,7 +220,7 @@
         }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f13':'n13',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f14':'n14',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
             cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
