@@ -53,15 +53,17 @@
         .event-tag { font-size: 24px; padding: 6px 18px; border-radius: 24px; font-weight: 700; color: #fff; }
         .event-desc { font-size: 28px; line-height: 1.8; margin-bottom: 40px; text-align: justify; }
         .chart-box { border-radius: 16px; padding: 40px 20px; }
-        .chart-grid { display: grid; gap: 4px; align-items: stretch; } /* 确保高度一致 */
+        .chart-grid { display: grid; gap: 4px; align-items: stretch; } 
         .chart-col { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* 彻底修复横轴对齐：通过Flex布局确保标签强制居中对齐 */
-        .chart-top, .chart-bottom { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; }
-        .chart-top { justify-content: flex-end; padding-bottom: 10px; } /* 为数字留出空间 */
-        .chart-bottom { justify-content: flex-start; padding-top: 10px; } /* 为数字留出空间 */
+        /* 上下容器固定200px */
+        .chart-top, .chart-bottom { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; height: 200px; min-height: 200px; flex-shrink: 0; }
+        .chart-top { justify-content: flex-end; padding-bottom: 10px; } 
+        .chart-bottom { justify-content: flex-start; padding-top: 10px; } 
         
-        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 16px 0; margin: 0; white-space: nowrap; flex-shrink: 0; }
+        /* 🔥核心修复：给中间标签强制固定 90px 高度并居中，确保横轴永远锁死在同一水平线🔥 */
+        .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 0; margin: 8px 0; height: 90px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        
         .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; pointer-events: none; z-index: 10; }
 
         /* 主题配色：美联储 (无点线) */
@@ -77,9 +79,7 @@
 
         /* 主题配色：非农 */
         .theme-nfp { background-color: #f5f6f8; color: #222222; }
-        /* 缩小非农头图和第一张卡片的间距 */
-        .theme-nfp .timeline-container { padding-top: 0; }
-        
+        .theme-nfp .timeline-container { padding-top: 10px; }
         .theme-nfp .event-card { background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #ebeef5; }
         .theme-nfp .event-tag { background-color: #e6a23c; }
         .theme-nfp .event-desc { color: #555; }
@@ -138,7 +138,6 @@
 
     <script>
         const fedData = [
-            // 新增 2026 年 5 月美联储数据
             {date:"2026年5月2日",tag:"会议要点",desc:"美联储5月利率决议出炉，基准利率维持在3.50%-3.75%不变。声明显示，“在考虑对联邦基金利率目标区间进行任何调整时，委员会将仔细评估即将公布的数据、不断变化的前景和风险平衡。”此外，“近几个月来，实现其2%的通胀目标的进展停滞。”“过去一年通胀放缓，但仍处于高位。”另外，美联储宣布将从6月开始放慢缩表速度，且放慢缩表的速度比市场预期的要快。",commodities:[{name:"CBOT大豆",rate:1.37},{name:"WTI原油",rate:-3.62},{name:"现货黄金",rate:1.52},{name:"大连铁矿石",rate:-1.03},{name:"LME铜",rate:0.22}]},
             {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
             {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
