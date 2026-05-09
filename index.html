@@ -138,7 +138,8 @@
 
     <script>
         const fedData = [
-            {date:"2026年5月2日",tag:"会议要点",desc:"美联储5月利率决议出炉，基准利率维持在3.50%-3.75%不变。声明显示，“在考虑对联邦基金利率目标区间进行任何调整时，委员会将仔细评估即将公布的数据、不断变化的前景和风险平衡。”此外，“近几个月来，实现其2%的通胀目标的进展停滞。”“过去一年通胀放缓，但仍处于高位。”另外，美联储宣布将从6月开始放慢缩表速度，且放慢缩表的速度比市场预期的要快。",commodities:[{name:"CBOT大豆",rate:1.37},{name:"WTI原油",rate:-3.62},{name:"现货黄金",rate:1.52},{name:"大连铁矿石",rate:-1.03},{name:"LME铜",rate:0.22}]},
+            // 已将2026年3月19日的数据准确无误地写入代码中
+            {date:"2026年3月19日",tag:"会议要点",desc:"美联储维持利率在3.5%-3.75%不变，连续第二次按兵不动；理事米兰投下反对票，认为应降息25个基点。点阵图中值维持2026年降息一次、2027年降息一次的预测，长期联邦基金利率预期中值小幅上调。能源价格上涨将推高整体通胀，现在判断幅度还为时过早。此次能源供应冲击是一次性的事件。",commodities:[{name:"CBOT大豆",rate:0.41},{name:"WTI原油",rate:-4.59},{name:"现货黄金",rate:-3.49},{name:"大连铁矿石",rate:-0.39},{name:"LME铜",rate:-1.05}]},
             {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
             {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
             {date:"2025年10月30日",tag:"会议要点",desc:"美联储如期降息25个基点，将基准利率目标区间下调至3.75%-4.00%。这是连续第二次降息，以防止招聘放缓演变成更严重的经济问题。鲍威尔做出了异常尖锐的表态，反驳了市场认为12月降息已是板上钉钉的预期，称“远非如此”，并表示由于政府停摆导致数据缺乏，官员面临非常高的经济前景不确定性。",commodities:[{name:"CBOT大豆",rate:-0.02},{name:"WTI原油",rate:-0.12},{name:"现货黄金",rate:2.43},{name:"大连铁矿石",rate:-0.25},{name:"LME铜",rate:-1.44}]},
@@ -146,7 +147,8 @@
             {date:"2025年7月31日",tag:"会议要点",desc:"美联储连续第五次会议按兵不动，将联邦基金利率目标区间维持在4.25%-4.5%不变。美联储表示，通胀仍略高，就业稳健，上半年经济增长放缓，不确定性依然较高。鲍威尔重申目前没理由降息，利率决定将更贴合市场预期，对经济活动的描述从“温和步伐扩张”改为“有所放缓”。",commodities:[{name:"CBOT大豆",rate:-0.23},{name:"WTI原油",rate:-1.37},{name:"现货黄金",rate:0.47},{name:"大连铁矿石",rate:0.51},{name:"LME铜",rate:0.27}]},
             {date:"2025年6月19日",tag:"会议要点",desc:"美联储将基准利率维持在4.25%-4.50%不变，连续第四次会议按兵不动，符合市场预期。公布的预测显示，官员们对是否能在秋季之前降息持开放态度。点阵图预测凸显了19名官员之间的分歧。其中10位预计今年至少会降息两次，比3月份时的比例要小一些。还有2位预计会降息一次。",commodities:[{name:"CBOT大豆",rate:-0.12},{name:"WTI原油",rate:-0.85},{name:"现货黄金",rate:-0.59},{name:"大连铁矿石",rate:0.35},{name:"LME铜",rate:-0.32}]},
             {date:"2025年5月8日",tag:"会议要点",desc:"美联储以12-0的投票比例通过将基准利率维持在4.25%-4.50%不变，为连续第三次按兵不动；将放慢从当前资产负债表中缩减美国国债和MBS的步伐。失业率已稳定，劳动力市场强劲，但高失业率和高通胀的风险已经上升；经济前景不确定性“进一步增加”；总需求与总供给改善了前景，但经济活动依然以稳健的速度扩张。",commodities:[{name:"CBOT大豆",rate:0.53},{name:"WTI原油",rate:2.56},{name:"现货黄金",rate:-1.72},{name:"大连铁矿石",rate:-2.05},{name:"LME铜",rate:0.73}]},
-            {date:"2025年3月20日",tag:"会议要点",desc:"美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]}
+            {date:"2025年3月20日",tag:"会议要点",desc:"美联储将联邦基金利率目标区间在4.25%-4.5%不变，符合市场普遍预期。同时，美联储宣布将从4月开始放慢缩表速度。尽管基准利率不变，但会议纪要和鲍威尔的讲话暗示，美联储对未来经济增长的预期有所下调，而对通胀的担忧则有所上升，并强调未来政策将高度依赖经济数据。此外，地缘政治和关税政策带来的不确定性也成为美联储考量的重要因素。",commodities:[{name:"CBOT大豆",rate:0.62},{name:"WTI原油",rate:1.89},{name:"现货黄金",rate:-0.09},{name:"大连铁矿石",rate:-0.46},{name:"LME铜",rate:-0.88}]},
+            {date:"2024年5月2日",tag:"会议要点",desc:"2024年5月利率决议出炉，基准利率维持在5.25%-5.50%不变。声明显示，“在考虑对联邦基金利率目标区间进行任何调整时，委员会将仔细评估即将公布的数据、不断变化的前景和风险平衡。”此外，“近几个月来，实现其2%的通胀目标缺乏进一步进展。”“过去一年通胀放缓，但仍处于高位。”另外，美联储宣布将从6月开始放慢缩表速度，且放慢缩表的速度比市场预期的要快。",commodities:[{name:"CBOT大豆",rate:1.37},{name:"WTI原油",rate:-3.62},{name:"现货黄金",rate:1.52},{name:"大连铁矿石",rate:-1.03},{name:"LME铜",rate:0.22}]}
         ];
 
         const nfpData = [
@@ -163,7 +165,7 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口增加17.7万人，高于预期的13万。美国4月失业率保持稳于4.2%，符合市场预期。交易员削减美联储降息押注，预计今年美联储降息次数接近四次。",commodities:[{name:"伦铜",rate:1.20},{name:"伦铝",rate:1.06},{name:"WTI原油",rate:-1.02},{name:"CBOT大豆",rate:0.76},{name:"现货黄金",rate:0.09},{name:"现货白银",rate:-1.24}]}
         ];
 
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f14'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n14'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f17'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n17'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
 
         function switchMode(m){ 
             state.mode=m; 
@@ -219,7 +221,7 @@
         }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f14':'n14',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f17':'n17',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
             cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
@@ -229,17 +231,23 @@
                 
                 let valFs = '26px';
                 let labFs = '26px';
-                let labWrap = 'white-space: normal; line-height: 1.2;';
+                // 仅在非农模式下允许换行
+                let labWrap = state.mode === 'nfp' ? 'white-space: normal; line-height: 1.2;' : 'white-space: nowrap;';
 
                 ev.commodities.forEach(c=>{ 
                     let h=Math.max((Math.abs(c.rate)/max)*120,4); let u=c.rate>=0; 
                     
-                    let displayName = c.name
-                        .replace('WTI原油', 'WTI<br>原油')
-                        .replace('CBOT大豆', 'CBOT<br>大豆')
-                        .replace('现货黄金', '现货<br>黄金')
-                        .replace('现货白银', '现货<br>白银')
-                        .replace('大连铁矿石', '大连<br>铁矿石');
+                    let displayName = c.name;
+                    
+                    // 只有非农模式下的特定品种才会替换 <br> 换行
+                    if(state.mode === 'nfp'){
+                        displayName = c.name
+                            .replace('WTI原油', 'WTI<br>原油')
+                            .replace('CBOT大豆', 'CBOT<br>大豆')
+                            .replace('现货黄金', '现货<br>黄金')
+                            .replace('现货白银', '现货<br>白银')
+                            .replace('大连铁矿石', '大连<br>铁矿石');
+                    }
 
                     ch+=`<div class="chart-col">
                             ${u?`<div class="chart-top"><div class="val-up" style="font-size:${valFs}; margin-bottom: 6px;">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:'<div class="chart-top"></div>'}
