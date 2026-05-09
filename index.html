@@ -34,7 +34,7 @@
         .btn-add:hover { opacity: 0.9; }
         .btn-cancel { background: #999; color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; display: none; }
         
-        .data-list-title { font-size: 16px; font-weight: bold; margin: 30px 0 15px; color: #333; border-left: 4px solid var(--btn-primary); padding-left: 10px; }
+        .data-list-title { font-size: 16px; font-weight: bold; margin: 30px 0 15px; color: #333; border-left: 4px solid var(--btn-primary); padding-left: 10px; display: flex; justify-content: space-between; align-items: center;}
         .data-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 8px; }
         .btn-edit { background: var(--btn-success); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;}
         .btn-delete { background: var(--btn-danger); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
@@ -113,7 +113,13 @@
             <button class="btn-add" onclick="submitData()" id="submit-btn">➕ 添加/保存数据</button>
             <button class="btn-cancel" onclick="cancelEdit()" id="cancel-edit-btn">放弃修改</button>
             
-            <div class="data-list-title">历史管理</div>
+            <div class="data-list-title">
+                <span>历史管理</span>
+                <div>
+                    <button onclick="exportJSON()" style="font-size: 12px; padding: 4px 8px; cursor: pointer; background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; border-radius: 4px;">📋 复制JSON</button>
+                    <button onclick="importJSON()" style="font-size: 12px; padding: 4px 8px; cursor: pointer; background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; border-radius: 4px;">📥 导入JSON</button>
+                </div>
+            </div>
             <div id="admin-data-list"></div>
         </div>
         <div class="panel-footer">
@@ -138,7 +144,6 @@
 
     <script>
         const fedData = [
-            // 已将2026年3月19日的数据准确无误地写入代码中
             {date:"2026年3月19日",tag:"会议要点",desc:"美联储维持利率在3.5%-3.75%不变，连续第二次按兵不动；理事米兰投下反对票，认为应降息25个基点。点阵图中值维持2026年降息一次、2027年降息一次的预测，长期联邦基金利率预期中值小幅上调。能源价格上涨将推高整体通胀，现在判断幅度还为时过早。此次能源供应冲击是一次性的事件。",commodities:[{name:"CBOT大豆",rate:0.41},{name:"WTI原油",rate:-4.59},{name:"现货黄金",rate:-3.49},{name:"大连铁矿石",rate:-0.39},{name:"LME铜",rate:-1.05}]},
             {date:"2026年1月29日",tag:"会议要点",desc:"2026年首场利率决议，美联储将基准利率维持在3.50%-3.75%不变，暂停了自去年9月以来的连续三次降息步伐，符合市场预期。理由是通胀仍处于较高水平且经济增长稳健。声明删除了有关就业下行风险上升的表述。鲍威尔表示，目前债务水平尚可维持但财政路径不可持续。预计关税对商品价格的影响将见顶并回落。",commodities:[{name:"CBOT大豆",rate:-0.26},{name:"WTI原油",rate:3.17},{name:"现货黄金",rate:-0.86},{name:"大连铁矿石",rate:1.98},{name:"LME铜",rate:4.46}]},
             {date:"2025年12月11日",tag:"会议要点",desc:"美联储将基准利率下调25个基点至3.50%-3.75%，为连续第三次会议降息，年内已累计降息75个基点。内部存在不同寻常的分歧，官员们暗示继续降息的意愿不高。鲍威尔表示利率政策已准备好应对未来经济形势，拒绝就近期是否会再次降息提供指引。他称加息并非基本预期，并暗示短期内可能会维持利率不变。",commodities:[{name:"CBOT大豆",rate:0.16},{name:"WTI原油",rate:-1.76},{name:"现货黄金",rate:1.22},{name:"大连铁矿石",rate:-1.56},{name:"LME铜",rate:2.37}]},
@@ -165,7 +170,7 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口增加17.7万人，高于预期的13万。美国4月失业率保持稳于4.2%，符合市场预期。交易员削减美联储降息押注，预计今年美联储降息次数接近四次。",commodities:[{name:"伦铜",rate:1.20},{name:"伦铝",rate:1.06},{name:"WTI原油",rate:-1.02},{name:"CBOT大豆",rate:0.76},{name:"现货黄金",rate:0.09},{name:"现货白银",rate:-1.24}]}
         ];
 
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f17'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n17'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f18'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n18'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
 
         function switchMode(m){ 
             state.mode=m; 
@@ -221,7 +226,7 @@
         }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f17':'n17',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f18':'n18',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
             cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
@@ -231,7 +236,6 @@
                 
                 let valFs = '26px';
                 let labFs = '26px';
-                // 仅在非农模式下允许换行
                 let labWrap = state.mode === 'nfp' ? 'white-space: normal; line-height: 1.2;' : 'white-space: nowrap;';
 
                 ev.commodities.forEach(c=>{ 
@@ -239,7 +243,6 @@
                     
                     let displayName = c.name;
                     
-                    // 只有非农模式下的特定品种才会替换 <br> 换行
                     if(state.mode === 'nfp'){
                         displayName = c.name
                             .replace('WTI原油', 'WTI<br>原油')
@@ -267,6 +270,33 @@
             let b=document.getElementById('export-btn'); b.innerText='拼命生成中...'; b.style.opacity='0.7';
             let w=document.getElementById('poster-scale-wrapper'); w.style.transform='scale(1)'; 
             setTimeout(()=>{ html2canvas(document.getElementById('poster-capture'),{width:1242,scale:1.5,useCORS:true}).then(c=>{ let l=document.createElement('a'); l.download='大宗商品行情长图.jpg'; l.href=c.toDataURL('image/jpeg',0.8); l.click(); w.style.transform='scale(0.65)'; b.innerText='⬇ 导出高清长图'; b.style.opacity='1';});},200); 
+        }
+
+        function exportJSON() {
+            const jsonStr = JSON.stringify(state[state.mode].data, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                alert("✅ 当前模式的数据已复制为 JSON！你可以直接发给 AI 或同事了。");
+            }).catch(err => {
+                alert("复制失败，可能是浏览器权限限制。");
+            });
+        }
+
+        function importJSON() {
+            const jsonStr = prompt("请在此粘贴完整的 JSON 代码：");
+            if (jsonStr && jsonStr.trim()) {
+                try {
+                    const parsed = JSON.parse(jsonStr);
+                    if (Array.isArray(parsed)) {
+                        state[state.mode].data = parsed;
+                        updateViews();
+                        alert("✅ 数据导入成功并已覆盖！");
+                    } else {
+                        alert("❌ 格式错误：请粘贴一个包含数组的 JSON！");
+                    }
+                } catch (e) {
+                    alert("❌ 解析失败：请确保粘贴的是合法的 JSON 格式！");
+                }
+            }
         }
         
         switchMode('fed');
