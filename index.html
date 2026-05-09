@@ -116,7 +116,6 @@
             <div class="data-list-title">
                 <span>历史管理</span>
                 <div>
-                    <button onclick="exportJSON()" style="font-size: 12px; padding: 4px 8px; cursor: pointer; background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; border-radius: 4px;">📋 复制JSON</button>
                     <button onclick="importJSON()" style="font-size: 12px; padding: 4px 8px; cursor: pointer; background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; border-radius: 4px;">📥 导入JSON</button>
                 </div>
             </div>
@@ -170,7 +169,7 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口增加17.7万人，高于预期的13万。美国4月失业率保持稳于4.2%，符合市场预期。交易员削减美联储降息押注，预计今年美联储降息次数接近四次。",commodities:[{name:"伦铜",rate:1.20},{name:"伦铝",rate:1.06},{name:"WTI原油",rate:-1.02},{name:"CBOT大豆",rate:0.76},{name:"现货黄金",rate:0.09},{name:"现货白银",rate:-1.24}]}
         ];
 
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f18'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n18'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f19'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n19'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
 
         function switchMode(m){ 
             state.mode=m; 
@@ -226,9 +225,9 @@
         }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f18':'n18',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f19':'n19',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
-            cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
+            cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button onclick="copySingleJSON(${i})" style="background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;">复制</button><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
             const p=document.getElementById('dynamic-timeline'); p.innerHTML=''; 
             cur.data.forEach(ev=>{ 
@@ -272,26 +271,33 @@
             setTimeout(()=>{ html2canvas(document.getElementById('poster-capture'),{width:1242,scale:1.5,useCORS:true}).then(c=>{ let l=document.createElement('a'); l.download='大宗商品行情长图.jpg'; l.href=c.toDataURL('image/jpeg',0.8); l.click(); w.style.transform='scale(0.65)'; b.innerText='⬇ 导出高清长图'; b.style.opacity='1';});},200); 
         }
 
-        function exportJSON() {
-            const jsonStr = JSON.stringify(state[state.mode].data, null, 2);
+        // 新增：单独复制某一条 JSON
+        function copySingleJSON(i) {
+            const jsonStr = JSON.stringify(state[state.mode].data[i], null, 2);
             navigator.clipboard.writeText(jsonStr).then(() => {
-                alert("✅ 当前模式的数据已复制为 JSON！你可以直接发给 AI 或同事了。");
+                alert("✅ 单条数据已复制！你可以直接发给 AI 或粘贴给别人导入。");
             }).catch(err => {
                 alert("复制失败，可能是浏览器权限限制。");
             });
         }
 
+        // 升级：支持导入单条或全部 JSON
         function importJSON() {
-            const jsonStr = prompt("请在此粘贴完整的 JSON 代码：");
+            const jsonStr = prompt("请在此粘贴 JSON 代码：");
             if (jsonStr && jsonStr.trim()) {
                 try {
                     const parsed = JSON.parse(jsonStr);
                     if (Array.isArray(parsed)) {
                         state[state.mode].data = parsed;
                         updateViews();
-                        alert("✅ 数据导入成功并已覆盖！");
+                        alert("✅ 全部数据导入成功并已覆盖！");
+                    } else if (typeof parsed === 'object' && parsed !== null && parsed.date) {
+                        // 如果粘贴的是单条数据对象，直接加到列表最上面
+                        state[state.mode].data.unshift(parsed);
+                        updateViews();
+                        alert("✅ 单条数据导入成功，已安全添加到最上方！");
                     } else {
-                        alert("❌ 格式错误：请粘贴一个包含数组的 JSON！");
+                        alert("❌ 格式错误：请粘贴正确的 JSON！");
                     }
                 } catch (e) {
                     alert("❌ 解析失败：请确保粘贴的是合法的 JSON 格式！");
