@@ -64,6 +64,7 @@
         /* 🔥核心修复：给中间标签强制固定 90px 高度并居中，确保横轴永远锁死在同一水平线🔥 */
         .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 0; margin: 8px 0; height: 90px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         
+        /* 水印基础样式 */
         .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; pointer-events: none; z-index: 10; }
 
         /* 主题配色：美联储 (无点线) */
@@ -76,6 +77,9 @@
         .theme-fed .bar-up { width: 36px; background: linear-gradient(180deg, #ff5722 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
         .theme-fed .val-down { color: #4ade80; font-size: 26px; font-weight: 900; margin-top: 12px;}
         .theme-fed .bar-down { width: 36px; background: linear-gradient(0deg, #4ade80 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
+        
+        /* 美联储暗色水印：强制变纯白，12%透明度 */
+        .theme-fed .watermark-img { filter: brightness(0) invert(1); opacity: 0.12; }
 
         /* 主题配色：非农 */
         .theme-nfp { background-color: #f5f6f8; color: #222222; }
@@ -89,7 +93,9 @@
         .theme-nfp .bar-up { width: 36px; background: linear-gradient(180deg, #d32f2f 0%, rgba(211,47,47,0.6) 100%); border-radius: 4px 4px 0 0; }
         .theme-nfp .val-down { color: #388e3c; font-size: 26px; font-weight: 900; margin-top: 12px;}
         .theme-nfp .bar-down { width: 36px; background: linear-gradient(0deg, #388e3c 0%, rgba(56,142,60,0.6) 100%); border-radius: 0 0 4px 4px; }
-        .theme-nfp .watermark-img { filter: invert(1); opacity: 0.08; }
+        
+        /* 非农浅色水印：强制变纯黑，6%透明度 */
+        .theme-nfp .watermark-img { filter: brightness(0); opacity: 0.06; }
 
         .footer-cta { border-top: 1px solid rgba(128, 128, 128, 0.1); padding: 80px 40px; display: flex; align-items: center; justify-content: center; }
         .qr-box { width: 220px; height: 220px; background: #fff; padding: 16px; border-radius: 16px; margin-right: 40px; }
@@ -169,7 +175,7 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口增加17.7万人，高于预期的13万。美国4月失业率保持稳于4.2%，符合市场预期。交易员削减美联储降息押注，预计今年美联储降息次数接近四次。",commodities:[{name:"伦铜",rate:1.20},{name:"伦铝",rate:1.06},{name:"WTI原油",rate:-1.02},{name:"CBOT大豆",rate:0.76},{name:"现货黄金",rate:0.09},{name:"现货白银",rate:-1.24}]}
         ];
 
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f19'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n19'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
+        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f20'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n20'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
 
         function switchMode(m){ 
             state.mode=m; 
@@ -225,7 +231,7 @@
         }
         
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f19':'n19',JSON.stringify(cur.data)); 
+            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f20':'n20',JSON.stringify(cur.data)); 
             const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
             cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button onclick="copySingleJSON(${i})" style="background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;">复制</button><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
             
@@ -257,7 +263,8 @@
                             ${!u?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down" style="font-size:${valFs}; margin-top: 6px;">${c.rate}%</div></div>`:'<div class="chart-bottom"></div>'}
                         </div>`; 
                 }); 
-                p.innerHTML+=`<div class="event-card"><img class="watermark-img" src="./watermark.png"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${ch}</div></div>`; 
+                // 注意这里替换了原来的 watermark.png 为 watermark.svg
+                p.innerHTML+=`<div class="event-card"><img class="watermark-img" src="./watermark.svg"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${ch}</div></div>`; 
             }); 
         }
 
@@ -271,7 +278,6 @@
             setTimeout(()=>{ html2canvas(document.getElementById('poster-capture'),{width:1242,scale:1.5,useCORS:true}).then(c=>{ let l=document.createElement('a'); l.download='大宗商品行情长图.jpg'; l.href=c.toDataURL('image/jpeg',0.8); l.click(); w.style.transform='scale(0.65)'; b.innerText='⬇ 导出高清长图'; b.style.opacity='1';});},200); 
         }
 
-        // 新增：单独复制某一条 JSON
         function copySingleJSON(i) {
             const jsonStr = JSON.stringify(state[state.mode].data[i], null, 2);
             navigator.clipboard.writeText(jsonStr).then(() => {
@@ -281,7 +287,6 @@
             });
         }
 
-        // 升级：支持导入单条或全部 JSON
         function importJSON() {
             const jsonStr = prompt("请在此粘贴 JSON 代码：");
             if (jsonStr && jsonStr.trim()) {
@@ -292,7 +297,6 @@
                         updateViews();
                         alert("✅ 全部数据导入成功并已覆盖！");
                     } else if (typeof parsed === 'object' && parsed !== null && parsed.date) {
-                        // 如果粘贴的是单条数据对象，直接加到列表最上面
                         state[state.mode].data.unshift(parsed);
                         updateViews();
                         alert("✅ 单条数据导入成功，已安全添加到最上方！");
