@@ -424,9 +424,9 @@
         let state = { 
             mode: 'fed', 
             idx: -1, 
-            fed: { data: JSON.parse(localStorage.getItem('f24')) || fedData, c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
-            nfp: { data: JSON.parse(localStorage.getItem('n24')) || nfpData, c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
-            usda: { data: JSON.parse(localStorage.getItem('u24')) || usdaData, c: [] },
+            fed: { data: JSON.parse(localStorage.getItem('f26')) || fedData, c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
+            nfp: { data: JSON.parse(localStorage.getItem('n26')) || nfpData, c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
+            usda: { data: JSON.parse(localStorage.getItem('u26')) || usdaData, c: [] },
             usdaMonth: 1 
         };
 
@@ -519,7 +519,7 @@
 
         function updateViews(){ 
             const cur=state[state.mode]; 
-            let storageKey = state.mode === 'fed' ? 'f24' : (state.mode === 'nfp' ? 'n24' : 'u24');
+            let storageKey = state.mode === 'fed' ? 'f26' : (state.mode === 'nfp' ? 'n26' : 'u26');
             localStorage.setItem(storageKey, JSON.stringify(cur.data)); 
             
             const l = document.getElementById('admin-data-list'); l.innerHTML=''; 
@@ -537,9 +537,6 @@
                 });
 
                 let tableHtml = `
-                    <div style="text-align: center; font-size: 80px; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #111827; margin-bottom: 50px; letter-spacing: 5px;">
-                        历年<span style="color: #d32f2f;">${state.usdaMonth}月</span>USDA供需报告回顾
-                    </div>
                     <div class="usda-table-container">
                         <div class="usda-thead">
                             <div class="usda-th col-year">年份</div>
