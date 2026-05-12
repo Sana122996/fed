@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金十期货长图生成器 - 终极专业版</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>金十期货长图生成器 - 终极三模版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -12,19 +12,20 @@
             --btn-danger: #ff4d4f;
             --btn-success: #52c41a;
             --border-color: #e4e7ed;
+            --usda-color: #52c41a;
         }
 
         body { margin: 0; padding: 0; font-family: 'Noto Sans SC', sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #222; }
 
         /* ================= 左侧控制台 ================= */
         .left-panel { width: 480px; min-width: 480px; background: #ffffff; height: 100vh; overflow-y: auto; box-shadow: 2px 0 15px rgba(0,0,0,0.3); z-index: 10; display: flex; flex-direction: column; }
-        .mode-switcher { display: flex; background: #fff; padding: 15px 25px 0; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 20; }
-        .mode-tab { flex: 1; text-align: center; padding: 12px; font-size: 16px; font-weight: 900; cursor: pointer; color: #999; border-bottom: 3px solid transparent; transition: 0.3s;}
+        .mode-switcher { display: flex; background: #fff; padding: 15px 15px 0; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 20; }
+        .mode-tab { flex: 1; text-align: center; padding: 12px 5px; font-size: 15px; font-weight: 900; cursor: pointer; color: #999; border-bottom: 3px solid transparent; transition: 0.3s;}
         .mode-tab.active { color: var(--btn-primary); border-bottom-color: var(--btn-primary); }
         .panel-body { padding: 25px; flex: 1; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #606266; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
         .rates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .rate-item { background: #f8f9fb; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center; position: relative; }
         .rate-item label { font-size: 12px; margin-bottom: 4px; display: block; color: #666; font-weight: bold;}
@@ -42,8 +43,10 @@
 
         /* ================= 右侧预览区 ================= */
         .right-panel { flex: 1; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background-color: #2a2a2a; padding: 40px 0; box-sizing: border-box; }
-        #poster-scale-wrapper { transform-origin: top center; transform: scale(0.65); transition: transform 0.3s; margin-bottom: 100px; }
-        .poster-container { width: 1242px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        
+        #poster-scale-wrapper { transform-origin: top center; transition: transform 0.3s; margin-bottom: 100px; }
+        
+        .poster-container { position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: width 0.3s ease; background-color: #12182b;}
         .header-image img { width: 100%; display: block; }
         
         .timeline-container { padding: 50px 40px 20px; position: relative; }
@@ -56,19 +59,16 @@
         .chart-grid { display: grid; gap: 4px; align-items: stretch; } 
         .chart-col { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* 上下容器固定200px */
         .chart-top, .chart-bottom { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; height: 200px; min-height: 200px; flex-shrink: 0; }
         .chart-top { justify-content: flex-end; padding-bottom: 10px; } 
         .chart-bottom { justify-content: flex-start; padding-top: 10px; } 
         
-        /* 🔥核心修复：给中间标签强制固定 90px 高度并居中，确保横轴永远锁死在同一水平线🔥 */
         .axis-label { width: 100%; text-align: center; font-size: 26px; font-weight: 700; padding: 0; margin: 8px 0; height: 90px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         
-        /* 水印基础样式 */
-        .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; pointer-events: none; z-index: 10; }
+        .watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; transition: 0.3s;}
 
-        /* 主题配色：美联储 (无点线) */
-        .theme-fed { background-color: #12182b; color: #ffffff; }
+        /* ========= 主题1：美联储 (无点线深色) ========= */
+        .theme-fed { background-color: #12182b; color: #ffffff; width: 1242px; }
         .theme-fed .event-tag { background-color: #ff5722; }
         .theme-fed .event-desc { color: #a0a5b5; }
         .theme-fed .chart-box { background-color: #1a2238; border: 1px solid rgba(255,255,255,0.05); }
@@ -77,12 +77,10 @@
         .theme-fed .bar-up { width: 36px; background: linear-gradient(180deg, #ff5722 0%, rgba(255,87,34,0.6) 100%); border-radius: 4px 4px 0 0; }
         .theme-fed .val-down { color: #4ade80; font-size: 26px; font-weight: 900; margin-top: 12px;}
         .theme-fed .bar-down { width: 36px; background: linear-gradient(0deg, #4ade80 0%, rgba(74,222,128,0.6) 100%); border-radius: 0 0 4px 4px; }
-        
-        /* 美联储暗色水印：强制变纯白，12%透明度 */
-        .theme-fed .watermark-img { filter: brightness(0) invert(1); opacity: 0.12; }
+        .theme-fed .watermark-img { filter: brightness(0) invert(1); opacity: 0.12; width: 380px; }
 
-        /* 主题配色：非农 */
-        .theme-nfp { background-color: #f5f6f8; color: #222222; }
+        /* ========= 主题2：非农 (浅色) ========= */
+        .theme-nfp { background-color: #f5f6f8; color: #222222; width: 1242px; }
         .theme-nfp .timeline-container { padding-top: 10px; }
         .theme-nfp .event-card { background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #ebeef5; }
         .theme-nfp .event-tag { background-color: #e6a23c; }
@@ -93,24 +91,56 @@
         .theme-nfp .bar-up { width: 36px; background: linear-gradient(180deg, #d32f2f 0%, rgba(211,47,47,0.6) 100%); border-radius: 4px 4px 0 0; }
         .theme-nfp .val-down { color: #388e3c; font-size: 26px; font-weight: 900; margin-top: 12px;}
         .theme-nfp .bar-down { width: 36px; background: linear-gradient(0deg, #388e3c 0%, rgba(56,142,60,0.6) 100%); border-radius: 0 0 4px 4px; }
-        
-        /* 非农浅色水印：强制变纯黑，6%透明度 */
-        .theme-nfp .watermark-img { filter: brightness(0); opacity: 0.06; }
+        .theme-nfp .watermark-img { filter: brightness(0); opacity: 0.06; width: 380px; }
 
-        .footer-cta { border-top: 1px solid rgba(128, 128, 128, 0.1); padding: 80px 40px; display: flex; align-items: center; justify-content: center; }
+        /* ========= 主题3：USDA 供需报告 (超宽2613px表格模式) ========= */
+        .theme-usda { background-color: #12182b; color: #ffffff; width: 2613px; }
+        .theme-usda .timeline-container { padding: 60px 80px; position: relative; z-index: 1;}
+        .theme-usda .usda-table-container { width: 100%; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.3); background: #ffffff; border: 2px solid #333; position: relative; z-index: 2;}
+        .theme-usda .usda-thead { display: flex; background: #d32f2f; color: #fff; } 
+        
+        /* 🔥强制加入 box-sizing: border-box 并让标题居中，彻底修复错位🔥 */
+        .theme-usda .usda-th { box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 56px; font-weight: 900; padding: 45px 30px; text-align: center; border-right: 2px solid rgba(255,255,255,0.2); }
+        .theme-usda .usda-th:last-child { border-right: none; }
+        
+        .theme-usda .usda-tbody { display: flex; flex-direction: column; }
+        .theme-usda .usda-tr { display: flex; border-top: 2px solid #e5e7eb; align-items: stretch; }
+        .theme-usda .usda-row-even { background: #ffffff; }
+        .theme-usda .usda-row-odd { background: #f9fafb; }
+        
+        /* 🔥强制加入 box-sizing: border-box 约束宽度🔥 */
+        .theme-usda .usda-td { box-sizing: border-box; display: flex; align-items: center; padding: 50px 40px; line-height: 1.7; border-right: 2px solid #e5e7eb; }
+        .theme-usda .usda-td:last-child { border-right: none; }
+        
+        /* 剥离列宽和内容对齐：统一在此处强制规定三列的严格宽度 */
+        .theme-usda .col-year { width: 350px; flex-shrink: 0; }
+        .theme-usda .col-reason { flex: 1; min-width: 0; }
+        .theme-usda .col-change { width: 550px; flex-shrink: 0; }
+        
+        /* 单独处理 TD 内部的样式展示 */
+        .theme-usda .usda-td.col-year { justify-content: center; font-weight: 900; font-size: 58px; color: #000; }
+        .theme-usda .usda-td.col-reason { justify-content: flex-start; text-align: left; font-size: 50px; color: #333; }
+        .theme-usda .usda-td.col-change { justify-content: center; font-weight: 900; font-size: 68px; }
+        
+        .theme-usda .watermark-img { filter: brightness(0); opacity: 0.05; width: 1200px; z-index: 0; }
+
+        .footer-cta { display: flex; align-items: center; justify-content: center; overflow: hidden;}
+        .footer-standard { border-top: 1px solid rgba(128, 128, 128, 0.1); padding: 80px 40px; }
         .qr-box { width: 220px; height: 220px; background: #fff; padding: 16px; border-radius: 16px; margin-right: 40px; }
         .qr-box img { width: 100%; height: 100%; object-fit: cover; }
-        .cta-text { font-size: 52px; font-weight: 900; line-height: 1.5; letter-spacing: 2px; }
+        .cta-text { font-size: 52px; font-weight: 900; line-height: 1.5; letter-spacing: 2px; color: inherit;}
     </style>
 </head>
 <body>
 
     <div class="left-panel">
         <div class="mode-switcher">
-            <div class="mode-tab active" onclick="switchMode('fed')" id="tab-fed">🏦 美联储模式</div>
-            <div class="mode-tab" onclick="switchMode('nfp')" id="tab-nfp">💼 非农模式</div>
+            <div class="mode-tab active" onclick="switchMode('fed')" id="tab-fed">🏦 美联储</div>
+            <div class="mode-tab" onclick="switchMode('nfp')" id="tab-nfp">💼 非农</div>
+            <div class="mode-tab" onclick="switchMode('usda')" id="tab-usda">🌾 USDA</div>
         </div>
-        <div class="panel-body">
+        
+        <div class="panel-body" id="input-container-normal">
             <div class="form-group"><label>公布日期</label><input type="text" id="input-date"></div>
             <div class="form-group"><label>标签</label><input type="text" id="input-tag"></div>
             <div class="form-group"><label>文案内容</label><textarea id="input-desc"></textarea></div>
@@ -118,15 +148,45 @@
             
             <button class="btn-add" onclick="submitData()" id="submit-btn">➕ 添加/保存数据</button>
             <button class="btn-cancel" onclick="cancelEdit()" id="cancel-edit-btn">放弃修改</button>
+        </div>
+
+        <div class="panel-body" id="input-container-usda" style="display: none;">
+            <div class="form-group">
+                <label style="color:#d32f2f; font-size:15px;">👉 当前正在查看/操作的报告月份：</label>
+                <select id="usda-month-select" onchange="renderUsdaList(); updateViews();" style="border: 2px solid #d32f2f; font-weight: bold; color: #d32f2f;">
+                    <option value="1">1月供需报告</option>
+                    <option value="2">2月供需报告</option>
+                    <option value="3">3月供需报告</option>
+                    <option value="4">4月供需报告</option>
+                    <option value="5">5月供需报告</option>
+                    <option value="6">6月供需报告</option>
+                    <option value="7">7月供需报告</option>
+                    <option value="8">8月供需报告</option>
+                    <option value="9">9月供需报告</option>
+                    <option value="10">10月供需报告</option>
+                    <option value="11">11月供需报告</option>
+                    <option value="12">12月供需报告</option>
+                </select>
+            </div>
+            <div style="border-top: 1px dashed #ccc; margin: 20px 0;"></div>
+            <div class="form-group"><label>年份</label><input type="text" id="usda-input-year" placeholder="例如：2026年"></div>
+            <div class="form-group"><label>CBOT大豆涨跌幅</label><input type="text" id="usda-input-change" placeholder="例如：-1.52% 或者 +2.0%"></div>
+            <div class="form-group"><label>报告核心逻辑 / 行情回顾</label><textarea id="usda-input-reason" style="height: 120px;" placeholder="输入文字..."></textarea></div>
             
+            <button class="btn-add" onclick="submitUsdaData()" id="usda-submit-btn">➕ 存入该月数据</button>
+            <button class="btn-cancel" onclick="cancelUsdaEdit()" id="usda-cancel-edit-btn">放弃修改</button>
+        </div>
+
+        <div class="panel-body" style="padding-top: 0;">
             <div class="data-list-title">
-                <span>历史管理</span>
+                <span id="admin-list-title">历史管理</span>
                 <div>
                     <button onclick="importJSON()" style="font-size: 12px; padding: 4px 8px; cursor: pointer; background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; border-radius: 4px;">📥 导入JSON</button>
                 </div>
             </div>
             <div id="admin-data-list"></div>
         </div>
+
         <div class="panel-footer">
             <button class="btn-export" onclick="generatePoster()" id="export-btn" style="background:#ff5722; color:#fff; width:100%; padding:15px; border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer;">⬇ 导出高清长图</button>
             <p><a href="https://squoosh.app/" target="_blank" style="color:#1890ff; font-size:13px; text-decoration:none; font-weight:bold;">图片太大？去压缩 🗜️</a></p>
@@ -134,12 +194,15 @@
     </div>
 
     <div class="right-panel">
-        <div id="poster-scale-wrapper">
+        <div id="poster-scale-wrapper" style="transform: scale(0.65);">
             <div class="poster-container theme-fed" id="poster-capture">
+                <img class="watermark-img" src="./watermark.svg">
+                
                 <div class="header-image"><img id="poster-header-img" src="./header-bg.jpg"></div>
                 <div class="timeline-container" id="dynamic-timeline"></div>
-                <div class="disclaimer-text" style="text-align: center; font-size: 22px; padding-bottom: 30px; opacity: 0.6;">注：以上均为公布当日品种行情日线涨跌</div>
-                <div class="footer-cta">
+                
+                <div class="disclaimer-text" id="poster-disclaimer" style="text-align: center; font-size: 22px; padding-bottom: 30px; opacity: 0.6;">注：以上均为公布当日品种行情日线涨跌</div>
+                <div class="footer-cta footer-standard" id="poster-footer">
                     <div class="qr-box"><img src="./qrcode.png"></div>
                     <div class="cta-text">扫码下载金十期货APP<br><span style="color:#ff5722">重要数据不会错过>></span></div>
                 </div>
@@ -175,15 +238,234 @@
             {date:"2025年4月",tag:"数据亮点",desc:"美国4月季调后非农就业人口增加17.7万人，高于预期的13万。美国4月失业率保持稳于4.2%，符合市场预期。交易员削减美联储降息押注，预计今年美联储降息次数接近四次。",commodities:[{name:"伦铜",rate:1.20},{name:"伦铝",rate:1.06},{name:"WTI原油",rate:-1.02},{name:"CBOT大豆",rate:0.76},{name:"现货黄金",rate:0.09},{name:"现货白银",rate:-1.24}]}
         ];
 
-        let state = { mode:'fed', idx:-1, fed:{data:JSON.parse(localStorage.getItem('f20'))||fedData, c:["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"]}, nfp:{data:JSON.parse(localStorage.getItem('n20'))||nfpData, c:["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"]} };
+        const usdaData = [
+            {"month": 1,"year": "2025年","change": "+2.98%","reason": "USDA超预期下调美豆单产导致期末库存下调超预期，供应边际缩紧给予价格支撑"},
+            {"month": 1,"year": "2024年","change": "-0.85%","reason": "USDA上调美豆单产，且对南美大豆产量预估处于市场预估的高位。"},
+            {"month": 1,"year": "2023年","change": "+0.61%","reason": "USDA意外下调美国大豆单产和产量预测，巴西增产幅度和阿根廷减产基本符合市场预期。"},
+            {"month": 1,"year": "2022年","change": "-1.57%","reason": "USDA下调南美产量预期和全球大豆库存，报告整体表现利多。但因前期关于南美减产的交易已较为充分，美豆利多出尽。"},
+            {"month": 1,"year": "2021年","change": "-1.18%","reason": "USDA意外下调美豆单产至50.2，但利多出尽"},
+            {"month": 1,"year": "2020年","change": "0.26%","reason": "尽管USDA公布的美豆产量预估高于预期，但中国需求增加的预期抵消此不利影响"},
+            {"month": 1,"year": "2019年","change": "-","reason": "美国政府停摆无报告"},
+            {"month": 1,"year": "2018年","change": "1.11%","reason": "USDA调降2017/18年度美豆产量预估"},
+            {"month": 1,"year": "2017年","change": "2.84%","reason": "USDA下调2016/17年度美国大豆产量和库存预估"},
+            {"month": 1,"year": "2016年","change": "1.54%","reason": "USDA发布的大豆产量和季度库存数据低于预期"},
+            {"month": 1,"year": "2015年","change": "-3.44%","reason": "USDA上调美国大豆和巴西大豆产量预估"},
+            {"month": 1,"year": "2014年","change": "0.37%","reason": "USDA发布的大豆数据符合市场预期，但美国大豆出口需求强劲"},
+            {"month": 1,"year": "2013年","change": "-0.47%","reason": "USDA上调2012年美豆产量预估和巴西大豆产量预估"},
+            {"month": 1,"year": "2012年","change": "-1.70%","reason": "USDA发布的大豆产量和库存数据高于预期"},
+            {"month": 1,"year": "2011年","change": "4.27%","reason": "USDA下调了2010/11年度美国大豆期末库存数据"},
+            {"month": 2,"year": "2025年","change": "-0.52%","reason": "美豆期末库存高于市场平均预估，但南美大豆产量前景的不确定性限制跌幅。"},
+            {"month": 2,"year": "2024年","change": "0.48%","reason": "USDA下调巴西大豆产量预估，但是期初库存上调200万吨，导致总供应量净增加100万吨。"},
+            {"month": 2,"year": "2023年","change": "-0.39%","reason": "USDA报告上调美豆期末库存压制美豆价格，市场对阿根廷大豆产量担忧则支撑豆价。"},
+            {"month": 2,"year": "2022年","change": "-1.32%","reason": "USDA下调南美大豆产量预估，但下调幅度不及预期"},
+            {"month": 2,"year": "2021年","change": "-3.61%","reason": "USDA维持巴西大豆产量创纪录的1.33亿吨预期不变，且高于预期1.32亿吨"},
+            {"month": 2,"year": "2020年","change": "0.06%","reason": "虽然USDA调降美豆库存预期，但其对巴西大豆产量预期调高200万吨，抵消这一影响"},
+            {"month": 2,"year": "2019年","change": "0.14%","reason": "USDA下调美国大豆产量及库存预估"},
+            {"month": 2,"year": "2018年","change": "0.48%","reason": "USDA上调美国大豆期末库存预估，但阿根廷大豆供应收紧担忧抵消了这一不利影响"},
+            {"month": 2,"year": "2017年","change": "-0.78%","reason": "USDA公布的美国大豆期末库存预估高于预期"},
+            {"month": 2,"year": "2016年","change": "0.09%","reason": "尽管USDA上调美国大豆期末库存且高于预期，但逢低买盘进场提振美豆价格"},
+            {"month": 2,"year": "2015年","change": "-0.97%","reason": "USDA下调美豆期末库存预估，但和此前市场预期差别不大，且南美大豆产量预期数据较为庞大"},
+            {"month": 2,"year": "2014年","change": "-0.45%","reason": "USDA公布的美国大豆期末库存预估高于预期"},
+            {"month": 2,"year": "2013年","change": "-2.30%","reason": "USDA意外上调全球大豆结转库存预估"},
+            {"month": 2,"year": "2012年","change": "-0.32%","reason": "USDA维持美国大豆期末库存预估不变，而玉米和小麦拖累了美豆价格"},
+            {"month": 2,"year": "2011年","change": "1.17%","reason": "USDA维持美豆期末库存预估不变，但玉米大涨带来了比价外溢效应"},
+            {"month": 3,"year": "2025年","change": "-0.82%","reason": "美豆数据未做调整，全球大豆期末库存下修，不过调整幅度较小，报告影响中性"},
+            {"month": 3,"year": "2024年","change": "1.21%","reason": "USDA对于美豆单产预估符合预期，对巴西大豆产量下调幅度不及预期，对于美豆影响偏中性，报告公布后CBOT大豆稳步上涨"},
+            {"month": 3,"year": "2023年","change": "0.08%","reason": "USDA下调阿根廷大豆产量预估，上调美国大豆出口预估"},
+            {"month": 3,"year": "2022年","change": "1.27%","reason": "USDA公布的巴西大豆产量低于预期，南美大豆产量以及库存下降，美豆出口上调"},
+            {"month": 3,"year": "2021年","change": "-2.19%","reason": "USDA维持美国大豆期末库存数据不变，但高于市场预期"},
+            {"month": 3,"year": "2020年","change": "0.72%","reason": "USDA上调南美大豆产量预期，且上调幅度超过大多分析师的预期，但经济政策积极背景下宏观市场反弹覆盖了报告的不利影响"},
+            {"month": 3,"year": "2019年","change": "-0.75%","reason": "USDA公布的巴西大豆产量高于预期，且美豆期末库存虽符合期但仍显著高于上年同期，中美两国贸易谈判进展有限"},
+            {"month": 3,"year": "2018年","change": "-0.12%","reason": "USDA公布的美豆期末库存高于此前市场预期"},
+            {"month": 3,"year": "2017年","change": "-1.05%","reason": "USDA上调巴西大豆产量预测数据"},
+            {"month": 3,"year": "2016年","change": "0.14%","reason": "USDA下调全球大豆期末库存预测数据"},
+            {"month": 3,"year": "2015年","change": "-0.88%","reason": "USDA意外维持美豆库存数据不变，高于此前市场预期"},
+            {"month": 3,"year": "2014年","change": "-2.68%","reason": "USDA对美国大豆库存预估高于预期"},
+            {"month": 3,"year": "2013年","change": "-0.17%","reason": "USDA公布的美国和全球大豆库存预测数据高于市场预期"},
+            {"month": 3,"year": "2012年","change": "-0.06%","reason": "USDA维持美国大豆期末库存数据不变，但高于市场预期"},
+            {"month": 3,"year": "2011年","change": "0.48%","reason": "USDA维持美国大豆期末库存数据不变，但低于市场预期"},
+            {"month": 4,"year": "2025年","change": "+1.53%","reason": "美豆平衡表进口量和压榨量均小幅上调，压榨量上调幅度略大，导致期末库存环比小幅下行。"},
+            {"month": 4,"year": "2024年","change": "+1.10%","reason": "USDA小幅下调全球大豆产量和期末库存，上调美国大豆期末库存，然而利空消息的影响从盘面上看已经削弱。"},
+            {"month": 4,"year": "2023年","change": "+0.53%","reason": "巴西产量的上调和阿根廷的下调均在市场预期之内，美豆出口未上调导致结转高于预期，整体偏中性。"},
+            {"month": 4,"year": "2022年","change": "+2.5%","reason": "USDA将巴西2021/2022年度大豆产量预期从此前的1.27亿吨下调至1.25亿吨，且低于市场预期的1.2514亿吨。同时将美国大豆期末库存从2.85亿蒲下调至2.6亿蒲"},
+            {"month": 4,"year": "2021年","change": "-0.50%","reason": "USDA上调巴西大豆产量预期，高于大部分机构预测。美国大豆期末库存环比持平，但数据公布前市场普遍预期下降"},
+            {"month": 4,"year": "2020年","change": "1.05%","reason": "USDA虽然上调美豆期末库存，但其公布的全球大豆期末库存低于预期，同时美元走软利于提升美豆出口竞争力"},
+            {"month": 4,"year": "2019年","change": "0.00%","reason": "USDA公布的美豆期末库存低于预期，但同时上调巴西大豆产量及全球大豆期末库存预期"},
+            {"month": 4,"year": "2018年","change": "0.29%","reason": "USDA下调美国大豆期末库存预估，与市场预期库存截然相反"},
+            {"month": 4,"year": "2017年","change": "-0.27%","reason": "USDA上调南美大豆产量和美国大豆期末库存数据"},
+            {"month": 4,"year": "2016年","change": "0.54%","reason": "USDA公布的美国大豆及全球大豆期末库存预估符合预期，但商品基金大举做多"},
+            {"month": 4,"year": "2015年","change": "-1.85%","reason": "USDA虽说下调美国大豆期末库存预估，但符合此前市场预期，与此同时其上调全球大豆期末库存预期"},
+            {"month": 4,"year": "2014年","change": "0.88%","reason": "USDA下调美国大豆期末库存预估"},
+            {"month": 4,"year": "2013年","change": "-0.20%","reason": "因USDA维持美国大豆期末库存预估不变，但上调全球大豆期末库存预估"},
+            {"month": 4,"year": "2012年","change": "-0.52%","reason": "USDA下调南美大豆产量和美国大豆期末库存数据，但商品基金入市抛售"},
+            {"month": 4,"year": "2011年","change": "2.11%","reason": "USDA虽说维持美豆期末库存预估不变，但高于此前预期，不过美元汇率走软，巴西大豆现货基差坚挺及商品基金大举做多"},
+            {"month": 5,"year": "2025年","change": "+0.47%","reason": "2025/26年度美国大豆产量预计将下降至43.4亿蒲式耳，趋势产量和面积将下降"},
+            {"month": 5,"year": "2024年","change": "+0.04%","reason": "新季美豆基本符合预期，报告整体偏空，但因报告发布前市场已经提前消化，因此报告影响较小。"},
+            {"month": 5,"year": "2023年","change": "-1.24%","reason": "全球大豆产量预计增加，阿根廷产量的恢复以及巴西、美国等主产国均上调产量预期"},
+            {"month": 5,"year": "2022年","change": "+2.00%","reason": "USDA下调南美大豆产量和全球大豆年末库存预估，全球大豆供需紧缩"},
+            {"month": 5,"year": "2021年","change": "+1.67%","reason": "USDA下调阿根廷大豆产量和全球大豆期末库存预估"},
+            {"month": 5,"year": "2020年","change": "-0.23%","reason": "USDA上调美国大豆期末库存预估"},
+            {"month": 5,"year": "2019年","change": "-0.37%","reason": "虽然USDA下调美豆期末库存，但大豆库存仍大幅高于市场预期"},
+            {"month": 5,"year": "2018年","change": "+0.26%","reason": "虽然USDA下调美豆期末库存，但其大幅上调全球供应"},
+            {"month": 5,"year": "2017年","change": "-0.39%","reason": "USDA上调南美大豆产量和美国大豆期末库存数据"},
+            {"month": 5,"year": "2016年","change": "+5.60%","reason": "USDA大幅下调美豆期末库存预估数据"},
+            {"month": 5,"year": "2015年","change": "-0.23%","reason": "USDA上调美国及全球大豆期末库存预估"},
+            {"month": 5,"year": "2014年","change": "+1.19%","reason": "USDA公布的美豆期末库存数据低于市场预期"},
+            {"month": 5,"year": "2013年","change": "-0.69%","reason": "USDA公布的美豆产量及期末库存数据高于市场预期"},
+            {"month": 5,"year": "2012年","change": "+1.75%","reason": "USDA公布的美国大豆期末库存数据低于业内预期"},
+            {"month": 5,"year": "2011年","change": "-0.47%","reason": "USDA发布的陈豆供需数据利空"},
+            {"month": 6,"year": "2024年","change": "-0.06%","reason": "USDA上调了美豆期初与期末库存数据，略微降低巴西大豆产量"},
+            {"month": 6,"year": "2023年","change": "0.65%","reason": "USDA上调新作美豆期末库存预估，但市场关注降水偏少带来的土壤墒情缺失"},
+            {"month": 6,"year": "2022年","change": "-1.24%","reason": "USDA上调了美豆旧作出口量和期末库存，但下调了巴西和阿根廷产量和期末库存"},
+            {"month": 6,"year": "2021年","change": "-2.27%","reason": "USDA供需报告上调美豆旧作库存15百万蒲，利空美豆"},
+            {"month": 6,"year": "2020年","change": "0.15%","reason": "USDA下调美国和阿根廷旧作大豆产量，上调美国和中国压榨量"},
+            {"month": 6,"year": "2019年","change": "-0.26%","reason": "USDA调增2019/20年度美豆期末库存预期"},
+            {"month": 6,"year": "2018年","change": "0.09%","reason": "USDA美豆供需报告中性，但邻池玉米大涨到来外溢效应"},
+            {"month": 6,"year": "2017年","change": "0.37%","reason": "USDA公布的美豆期末库存稍高于此前市场预期，但技术性买盘及干热天气担忧抵消此不利影响"},
+            {"month": 6,"year": "2016年","change": "0.19%","reason": "USDA大幅下调美豆期末库存预估数据"},
+            {"month": 6,"year": "2015年","change": "-0.21%","reason": "USDA下调美豆期末库存预估，但邻池农产品大幅下挫掩盖此利好影响"},
+            {"month": 6,"year": "2014年","change": "-1.16%","reason": "USDA上调了全球大豆期末库存数据"},
+            {"month": 6,"year": "2013年","change": "-0.15%","reason": "USDA维持美豆期末库存数据不变"},
+            {"month": 6,"year": "2012年","change": "0.72%","reason": "USDA下调美国大豆期末库存预估"},
+            {"month": 6,"year": "2011年","change": "-0.55%","reason": "USDA上调美国大豆期末库存预估"},
+            {"month": 6,"year": "2010年","change": "-0.90%","reason": "USDA公布的美豆期末库存预估略高于此前市场预期"},
+            {"month": 7,"year": "2024年","change": "-0.30%","reason": "USDA下调美豆产量、期末库存预测，报告影响整体中性偏多，但由于美豆生长状态良好，美豆期价冲高回落"},
+            {"month": 7,"year": "2023年","change": "0.35%","reason": "美豆单产维持不变，产量预期下调"},
+            {"month": 7,"year": "2022年","change": "-4.42%","reason": "USDA未调整美豆单产预测，虽下调期末库存预估，但仍高于市场的平均预期"},
+            {"month": 7,"year": "2021年","change": "0.02%","reason": "美农7月供需报告缺乏亮点，尽管旧作年度出口、压榨下调，但因进口下调而抵消"},
+            {"month": 7,"year": "2020年","change": "-1.69%","reason": "虽然USDA大幅上调美国大豆期末库存预估，但中西部较往年干燥导致尾盘收回跌幅"},
+            {"month": 7,"year": "2019年","change": "1.64%","reason": "USDA小幅下调美国大豆产量和期末库存预估"},
+            {"month": 7,"year": "2018年","change": "-1.82%","reason": "虽然USDA大幅上调美国大豆期末库存预估，但尾盘空头回补活跃"},
+            {"month": 7,"year": "2017年","change": "-4.57%","reason": "虽然USDA下调美豆期末库存，但天气前景改善掩盖此利多消息的提振作用"},
+            {"month": 7,"year": "2016年","change": "1.73%","reason": "USDA大幅下调美豆期末库存预估数据"},
+            {"month": 7,"year": "2015年","change": "0.61%","reason": "USDA大幅下调美豆期末库存预估数据"},
+            {"month": 7,"year": "2014年","change": "1.05%","reason": "USDA大幅上调美国大豆期末库存预估"},
+            {"month": 7,"year": "2013年","change": "-2.60%","reason": "虽然USDA上调美国大豆期末库存预估，但作物生长和种植推迟担忧且邻池小麦和玉米期货走强抵消此不利影响"},
+            {"month": 7,"year": "2012年","change": "0.43%","reason": "USDA下调美国大豆产量及期末库存数据预估，但获利了结以及美国中西部地区潮湿的天气预报扭转早盘升势"},
+            {"month": 7,"year": "2011年","change": "1.58%","reason": "USDA发布的供需数据中性,但邻池玉米大幅走强带动豆价"},
+            {"month": 7,"year": "2010年","change": "-0.24%","reason": "虽然USDA上调美国大豆期末库存预估，但对恶劣天气可能不利新作生长的担忧抵消此不利影响"},
+            {"month": 7,"year": "2009年","change": "-0.60%","reason": "USDA上调美国大豆期末库存预估，但空头回补帮助扭转早盘跌势"},
+            {"month": 8,"year": "2024年","change": "-2.73%","reason": "USDA上调美国大豆产量预估，增加对全球供应充足的预期。"},
+            {"month": 8,"year": "2023年","change": "-1.00%","reason": "虽然USDA将美豆单产预测超预期下调至50.9蒲/英亩，但市场认为良好的天气将会扭转单产下滑的态势"},
+            {"month": 8,"year": "2022年","change": "-0.34%","reason": "USDA月报上调了美豆单产和产量，期末库存触底回升，美豆供应将趋于宽松"},
+            {"month": 8,"year": "2021年","change": "1.83%","reason": "USDA大幅调减了新作大豆单产预估，并再次释放了美国新旧作的压榨和出口压力"},
+            {"month": 8,"year": "2020年","change": "1.75%","reason": "USDA大豆单产数据超出市场预期上限，市场认为利空基本出尽"},
+            {"month": 8,"year": "2019年","change": "-1.40%","reason": "USDA下调美豆产量预估数据，但邻池玉米暴跌掩盖这利好作用"},
+            {"month": 8,"year": "2018年","change": "-4.67%","reason": "USDA预估的美国大豆单产超预期"},
+            {"month": 8,"year": "2017年","change": "-3.39%","reason": "USDA公布的大豆单产和产量数据超过市场预期水平"},
+            {"month": 8,"year": "2016年","change": "-0.23%","reason": "USDA公布的大豆产量预估超预期"},
+            {"month": 8,"year": "2015年","change": "-2.34%","reason": "USDA意外上调美国大豆产量预估"},
+            {"month": 8,"year": "2014年","change": "-1.28%","reason": "USDA公布的美豆期末库存预估高于预期"},
+            {"month": 8,"year": "2013年","change": "3.64%","reason": "USDA下调美国大豆产量和单产预估数据"},
+            {"month": 8,"year": "2012年","change": "0.77%","reason": "USDA降低美国大豆产量和结转库存预估"},
+            {"month": 8,"year": "2011年","change": "2.32%","reason": "USDA下调美国大豆产量预估"},
+            {"month": 8,"year": "2010年","change": "1.28%","reason": "USDA报告显示全球大豆需求增长，抵消了创纪录产量预期带来的利空影响"},
+            {"month": 9,"year": "2024年","change": "-0.52%","reason": "USDA上调全球大豆产量"},
+            {"month": 9,"year": "2023年","change": "0.46%","reason": "USDA产量下调但接近市场预期"},
+            {"month": 9,"year": "2022年","change": "5.13%","reason": "USDA月报超预期下调美豆单产至50.5蒲/英亩，产量、库存数据皆低于市场预期，美豆丰产预期落空"},
+            {"month": 9,"year": "2021年","change": "-0.14%","reason": "虽美豆种植面积意外下调，但单产如期上调，整体影响有限"},
+            {"month": 9,"year": "2020年","change": "0.54%","reason": "美豆新作结转库存略低于市场平均预期"},
+            {"month": 9,"year": "2019年","change": "3.14%","reason": "USDA大幅下调美豆库存数据"},
+            {"month": 9,"year": "2018年","change": "0.99%","reason": "USDA上调美豆产量预估数据，但报导称美国政府提议与中国展开新一轮贸易磋商抵消这一不利影响"},
+            {"month": 9,"year": "2017年","change": "-0.99%","reason": "USDA意外上调大豆单产和产量预测数据"},
+            {"month": 9,"year": "2016年","change": "-1.63%","reason": "USDA意外上调大豆单产和产量预测数据"},
+            {"month": 9,"year": "2015年","change": "0.03%","reason": "虽然USDA上调美豆产量预估，但同时也调低了结转库存预期"},
+            {"month": 9,"year": "2014年","change": "-1.23%","reason": "USDA公布的美豆产量预估高于预期"},
+            {"month": 9,"year": "2013年","change": "2.78%","reason": "USDA下调美豆产量和单产预估数据"},
+            {"month": 9,"year": "2012年","change": "2.60%","reason": "USDA下调美豆产量和单产预估数据"},
+            {"month": 9,"year": "2011年","change": "-2.16%","reason": "USDA上调美豆单产和产量预测数据"},
+            {"month": 9,"year": "2010年","change": "-1.12%","reason": "USDA公布的美豆产量预估高于预期"},
+            {"month": 9,"year": "2009年","change": "-2.54%","reason": "USDA上调美豆单产和产量预测数据"},
+            {"month": 10,"year": "2023年","change": "2.79%","reason": "USDA下调美豆单产预估"},
+            {"month": 10,"year": "2022年","change": "1.49%","reason": "USDA下调美豆单产预估"},
+            {"month": 10,"year": "2021年","change": "-2.40%","reason": "USDA上调美豆单产及期末库存预估"},
+            {"month": 10,"year": "2020年","change": "1.43%","reason": "USDA下调美豆期末库存数据"},
+            {"month": 10,"year": "2019年","change": "0.03%","reason": "USDA下调了美豆单产水平、产量、期末库存预估"},
+            {"month": 10,"year": "2018年","change": "0.91%","reason": "USDA下调了美豆产量预估，上调了美豆单产预估"},
+            {"month": 10,"year": "2017年","change": "2.77%","reason": "USDA下调美豆单产数据，与市场预期恰恰相反"},
+            {"month": 10,"year": "2016年","change": "-0.92%","reason": "USDA上调美豆产量预估"},
+            {"month": 10,"year": "2015年","change": "0.51%","reason": "USDA下调美豆产量预估"},
+            {"month": 10,"year": "2014年","change": "-2.07%","reason": "USDA公布的美豆产量预估低于预期，但商业交易商对冲抵消该利多影响"},
+            {"month": 10,"year": "2013年","change": "-","reason": "美国政府停摆导致USDA月度供需报告未出"},
+            {"month": 10,"year": "2012年","change": "1.66%","reason": "USDA上调美豆产量预估但库存--使用比率仍处于近50年低位"},
+            {"month": 10,"year": "2011年","change": "0.32%","reason": "USDA下调美豆产量预估"},
+            {"month": 10,"year": "2010年","change": "1.54%","reason": "USDA下调美豆产量预估"},
+            {"month": 10,"year": "2009年","change": "2.99%","reason": "USDA公布的美豆产量预估低于预期"},
+            {"month": 10,"year": "2008年","change": "-7.14%","reason": "USDA上调美豆产量预估"},
+            {"month": 11,"year": "2024年","change": "0.44%","reason": "USDA超预期下调24/25年度美豆单产导致产量大幅下调"},
+            {"month": 11,"year": "2023年","change": "-1.40%","reason": "美国农业部（USDA）意外上调美豆单产和产量"},
+            {"month": 11,"year": "2022年","change": "-2.05%","reason": "因美国农业部（USDA）略微上调了大豆单产和产量预估"},
+            {"month": 11,"year": "2021年","change": "2.08%","reason": "因美国农业部（USDA）意外下调美国大豆单产预估"},
+            {"month": 11,"year": "2020年","change": "2.88%","reason": "因美国农业部（USDA）下调美国大豆产量及结转库存预估"},
+            {"month": 11,"year": "2019年","change": "-0.59%","reason": "美国农业部（USDA）维持美国大豆产量预估不变，但高于市场预期"},
+            {"month": 11,"year": "2018年","change": "-0.06%","reason": "因美国农业部（USDA）上调美国大豆产量预估，且高于市场预期"},
+            {"month": 11,"year": "2017年","change": "-1.35%","reason": "因美国农业部（USDA）公布的美国大豆产量预估高于市场预期"},
+            {"month": 11,"year": "2016年","change": "-1.78%","reason": "因美国农业部(USDA)上调美国大豆产量预估"},
+            {"month": 11,"year": "2015年","change": "-1.24%","reason": "因美国农业部(USDA)上调美国大豆产量及结转库存预估"},
+            {"month": 11,"year": "2014年","change": "-1.06%","reason": "因美国农业部(USDA)上调美国大豆产量预估"},
+            {"month": 11,"year": "2013年","change": "2.33%","reason": "因美国农业部(USDA)下调全球库存预估"},
+            {"month": 11,"year": "2012年","change": "-2.98%","reason": "因美国农业部(USDA)美国大豆幅度，且高于市场预期"},
+            {"month": 11,"year": "2011年","change": "-1.62%","reason": "欧元区债务危机担忧加剧，压制了因美国农业部(USDA) 供需报告带来的利多影响"},
+            {"month": 11,"year": "2010年","change": "4.26%","reason": "因美国农业部（USDA）意外下调美国大豆单产预估"},
+            {"month": 12,"year": "2024年","change": "0.03%","reason": "美国玉米出口增加，期末库存下调，美玉米走强带动美豆走强。总体来看，大豆报告偏中性"},
+            {"month": 12,"year": "2023年","change": "-0.32%","reason": "USDA对于巴西旧作大豆产量再上修，致全球23/24年度大豆库存降幅不及市场预期"},
+            {"month": 12,"year": "2022年","change": "-0.27%","reason": "USDA对2022/23年度全球大豆产量和出口进行上调，带动全球大豆供应上调"},
+            {"month": 12,"year": "2021年","change": "0.30%","reason": "USDA公布的美国大豆期末库存略低于市场预期，报告中性略偏多"},
+            {"month": 12,"year": "2020年","change": "0.63%","reason": "USDA小幅下调美豆结转库存和南美产量预期，市场继续关注南美天气"},
+            {"month": 12,"year": "2019年","change": "0.45%","reason": "USDA维持美豆产量及期末库存预估不变，报告相对中性，但中美贸易谈判前景改善提振美豆期价上涨"},
+            {"month": 12,"year": "2018年","change": "0.58%","reason": "USDA维持美豆期末库存预估，但上调全球大豆期货库存，不过中美贸易形势可能改善抵消这一不利影响"},
+            {"month": 12,"year": "2017年","change": "-0.69%","reason": "USDA上调美国大豆期末库存预估，并同时上调巴西大豆产量预测数据"},
+            {"month": 12,"year": "2016年","change": "1.00%","reason": "USDA维持美国大豆期末库存预估数据不变，但稍高于此前预期，不过技术买盘活跃及阿根廷产区干燥天气令人担忧"},
+            {"month": 12,"year": "2015年","change": "0.00%","reason": "USDA维持美国大豆期末库存预估数据不变，但高于此前预期，不过美元走软抵消此不利影响"},
+            {"month": 12,"year": "2014年","change": "-1.64%","reason": "因预计巴西大豆产量创纪录和获利了结带来的压力盖过了美国大豆库存预估下调的利好影响。"},
+            {"month": 12,"year": "2013年","change": "-0.41%","reason": "USDA下调美国大豆期末库存预估，但获利了结及南美丰产预期盖过了此利多影响"},
+            {"month": 12,"year": "2012年","change": "-0.19%","reason": "USDA下调美国大豆期末库存预估，但邻池小麦暴跌带来的比价效应盖过了此利多影响"},
+            {"month": 12,"year": "2011年","change": "-2.25%","reason": "USDA上调美国大豆库存预估，且高于此前市场预期"},
+            {"month": 12,"year": "2010年","change": "-0.66%","reason": "USDA公布的美国大豆期末库存高于此前预期"}
+        ];
+
+
+        let state = { 
+            mode: 'fed', 
+            idx: -1, 
+            fed: { data: JSON.parse(localStorage.getItem('f23')) || fedData, c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
+            nfp: { data: JSON.parse(localStorage.getItem('n23')) || nfpData, c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
+            usda: { data: JSON.parse(localStorage.getItem('u23')) || usdaData, c: [] },
+            usdaMonth: 1 
+        };
 
         function switchMode(m){ 
-            state.mode=m; 
-            document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t.id===`tab-${m}`)); 
-            document.getElementById('poster-capture').className=`poster-container theme-${m}`; 
-            document.getElementById('poster-header-img').src=m==='fed'?'./header-bg.jpg':'./header-nfp.jpg'; 
-            document.getElementById('input-tag').value=m==='fed'?'会议要点':'数据亮点';
-            cancelEdit(); renderInput(); updateViews(); 
+            state.mode = m; 
+            document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.id === `tab-${m}`)); 
+            
+            const captureArea = document.getElementById('poster-capture');
+            captureArea.className = `poster-container theme-${m}`; 
+            
+            if(m === 'usda') {
+                document.getElementById('input-container-normal').style.display = 'none';
+                document.getElementById('input-container-usda').style.display = 'block';
+                captureArea.style.width = '2613px';
+                document.getElementById('poster-scale-wrapper').style.transform = 'scale(0.35)';
+                document.getElementById('poster-header-img').src = './header-usda.jpg';
+                document.getElementById('poster-footer').innerHTML = `<img src="./二维码.png" style="width: 100%; display: block;">`;
+                document.getElementById('poster-footer').style.padding = '0';
+                renderUsdaList();
+            } else {
+                document.getElementById('input-container-normal').style.display = 'block';
+                document.getElementById('input-container-usda').style.display = 'none';
+                captureArea.style.width = '1242px';
+                document.getElementById('poster-scale-wrapper').style.transform = 'scale(0.65)';
+                document.getElementById('poster-header-img').src = m === 'fed' ? './header-bg.jpg' : './header-nfp.jpg';
+                document.getElementById('input-tag').value = m === 'fed' ? '会议要点' : '数据亮点';
+                document.getElementById('poster-footer').innerHTML = `
+                    <div class="qr-box"><img src="./qrcode.png"></div>
+                    <div class="cta-text">扫码下载金十期货APP<br><span style="color:#ff5722">重要数据不会错过>></span></div>`;
+                document.getElementById('poster-footer').style.padding = '80px 40px';
+                renderInput(); 
+            }
+
+            cancelEdit(); 
+            updateViews(); 
         }
 
         function renderInput(v={}){ 
@@ -195,77 +477,131 @@
             h+=`<div class="add-type-btn" style="border:1px dashed #ccc; border-radius:6px; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:13px; font-weight:bold; color:#888;" onclick="addC()">+ 新增品种</div>`; 
             g.innerHTML=h; 
         }
+        function getV(){ let v={}; state[state.mode].c.forEach((n,i)=>{ let el=document.getElementById(`ri-${i}`); if(el)v[n]=el.value; }); return v; }
+        function addC(){ let n=prompt("请输入新增的品种名称 (例如：沪铝)："); if(n&&n.trim()!==''){ let cv=getV(); state[state.mode].c.push(n.trim()); renderInput(cv); } }
+        function remC(i){ if(confirm(`确定删除品种【${state[state.mode].c[i]}】吗？`)){ let cv=getV(); state[state.mode].c.splice(i,1); renderInput(cv); } }
+        function submitData(){ let d=document.getElementById('input-date').value, de=document.getElementById('input-desc').value; if(!d||!de)return alert("日期和文案为必填项！"); let it={date:d, tag:document.getElementById('input-tag').value, desc:de, commodities:state[state.mode].c.map((n,i)=>({name:n, rate:parseFloat(document.getElementById(`ri-${i}`).value)||0}))}; if(state.idx===-1)state[state.mode].data.unshift(it); else { state[state.mode].data[state.idx]=it; cancelEdit(); } updateViews(); }
 
-        function getV(){ 
-            let v={}; 
-            state[state.mode].c.forEach((n,i)=>{
-                let el = document.getElementById(`ri-${i}`);
-                if(el) v[n]=el.value;
-            }); 
-            return v; 
+        function renderUsdaList() {
+            state.usdaMonth = parseInt(document.getElementById('usda-month-select').value);
+        }
+        function submitUsdaData() {
+            let y = document.getElementById('usda-input-year').value;
+            let r = document.getElementById('usda-input-reason').value;
+            let c = document.getElementById('usda-input-change').value;
+            if(!y || !r) return alert("年份和核心逻辑为必填项！");
+            let it = { month: state.usdaMonth, year: y, change: c, reason: r };
+            if(state.idx === -1) { state.usda.data.push(it); } 
+            else { state.usda.data[state.idx] = it; cancelUsdaEdit(); }
+            updateViews();
+            document.getElementById('usda-input-year').value = '';
+            document.getElementById('usda-input-reason').value = '';
+            document.getElementById('usda-input-change').value = '';
+        }
+        function editUsdaD(globalIdx) {
+            state.idx = globalIdx;
+            let it = state.usda.data[globalIdx];
+            document.getElementById('usda-input-year').value = it.year;
+            document.getElementById('usda-input-reason').value = it.reason;
+            document.getElementById('usda-input-change').value = it.change;
+            document.getElementById('usda-submit-btn').innerText = '💾 保存修改';
+            document.getElementById('usda-submit-btn').style.background = 'var(--btn-success)';
+            document.getElementById('usda-cancel-edit-btn').style.display = 'block';
+        }
+        function cancelUsdaEdit() {
+            state.idx = -1;
+            document.getElementById('usda-submit-btn').innerText = '➕ 存入该月数据';
+            document.getElementById('usda-submit-btn').style.background = 'var(--btn-primary)';
+            document.getElementById('usda-cancel-edit-btn').style.display = 'none';
+            document.getElementById('usda-input-year').value = '';
+            document.getElementById('usda-input-reason').value = '';
+            document.getElementById('usda-input-change').value = '';
         }
 
-        function addC(){ 
-            let n=prompt("请输入新增的品种名称 (例如：沪铝)："); 
-            if(n && n.trim() !== ''){ 
-                let currentVals = getV();
-                state[state.mode].c.push(n.trim()); 
-                renderInput(currentVals); 
-            } 
-        }
-
-        function remC(i){ 
-            if(confirm(`确定删除品种【${state[state.mode].c[i]}】吗？`)){
-                let currentVals = getV();
-                state[state.mode].c.splice(i,1); 
-                renderInput(currentVals); 
-            }
-        }
-        
-        function submitData(){ 
-            let d=document.getElementById('input-date').value, de=document.getElementById('input-desc').value; 
-            if(!d||!de)return alert("日期和文案为必填项！"); 
-            let it={date:d, tag:document.getElementById('input-tag').value, desc:de, commodities:state[state.mode].c.map((n,i)=>({name:n, rate:parseFloat(document.getElementById(`ri-${i}`).value)||0}))}; 
-            if(state.idx===-1)state[state.mode].data.unshift(it); else { state[state.mode].data[state.idx]=it; cancelEdit(); } 
-            updateViews(); 
-        }
-        
         function updateViews(){ 
-            const cur=state[state.mode]; localStorage.setItem(state.mode==='fed'?'f20':'n20',JSON.stringify(cur.data)); 
-            const l=document.getElementById('admin-data-list'); l.innerHTML=''; 
-            cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button onclick="copySingleJSON(${i})" style="background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;">复制</button><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
+            const cur=state[state.mode]; 
+            let storageKey = state.mode === 'fed' ? 'f23' : (state.mode === 'nfp' ? 'n23' : 'u23');
+            localStorage.setItem(storageKey, JSON.stringify(cur.data)); 
             
-            const p=document.getElementById('dynamic-timeline'); p.innerHTML=''; 
-            cur.data.forEach(ev=>{ 
-                let max=Math.max(...ev.commodities.map(c=>Math.abs(c.rate)))||1; let ch=''; 
-                
-                let valFs = '26px';
-                let labFs = '26px';
-                let labWrap = state.mode === 'nfp' ? 'white-space: normal; line-height: 1.2;' : 'white-space: nowrap;';
+            const l = document.getElementById('admin-data-list'); l.innerHTML=''; 
+            const p = document.getElementById('dynamic-timeline'); p.innerHTML=''; 
 
-                ev.commodities.forEach(c=>{ 
-                    let h=Math.max((Math.abs(c.rate)/max)*120,4); let u=c.rate>=0; 
+            if (state.mode === 'usda') {
+                document.getElementById('admin-list-title').innerText = `历史管理 (${state.usdaMonth}月)`;
+                
+                let filteredData = cur.data.map((item, originalIndex) => ({...item, originalIndex}))
+                                           .filter(item => parseInt(item.month) === state.usdaMonth)
+                                           .sort((a, b) => parseInt(b.year) - parseInt(a.year)); 
+
+                filteredData.forEach(it => {
+                    l.innerHTML+=`<div class="data-item"><span><b>${it.year}</b><br><span style="color:#999;font-size:12px;">${it.reason.substring(0, 15)}...</span></span><div><button onclick="copySingleJSON(${it.originalIndex})" style="background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;">复制</button><button class="btn-edit" onclick="editUsdaD(${it.originalIndex})">改</button><button class="btn-delete" onclick="delD(${it.originalIndex})">删</button></div></div>`;
+                });
+
+                let tableHtml = `
+                    <div style="text-align: center; font-size: 80px; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #1a1a1a; margin-bottom: 50px; letter-spacing: 5px;">
+                        历年<span style="color: #d32f2f;">${state.usdaMonth}月</span>USDA供需报告回顾
+                    </div>
+                    <div class="usda-table-container">
+                        <div class="usda-thead">
+                            <div class="usda-th col-year">年份</div>
+                            <div class="usda-th col-reason">USDA供需报告内容及行情回顾</div>
+                            <div class="usda-th col-change">CBOT大豆涨跌幅</div>
+                        </div>
+                        <div class="usda-tbody">
+                `;
+                
+                filteredData.forEach((row, i) => {
+                    let displayC = String(row.change).trim();
+                    let cVal = parseFloat(displayC.replace('%', ''));
+                    let colorStyle = '#666';
                     
-                    let displayName = c.name;
-                    
-                    if(state.mode === 'nfp'){
-                        displayName = c.name
-                            .replace('WTI原油', 'WTI<br>原油')
-                            .replace('CBOT大豆', 'CBOT<br>大豆')
-                            .replace('现货黄金', '现货<br>黄金')
-                            .replace('现货白银', '现货<br>白银')
-                            .replace('大连铁矿石', '大连<br>铁矿石');
+                    if (!isNaN(cVal)) {
+                        if (cVal > 0) { 
+                            colorStyle = '#d32f2f'; 
+                            if(!displayC.startsWith('+')) displayC = '+' + displayC; 
+                        } else if (cVal < 0) { 
+                            colorStyle = '#388e3c'; 
+                        }
+                        if (!displayC.includes('%')) displayC += '%';
                     }
 
-                    ch+=`<div class="chart-col">
-                            ${u?`<div class="chart-top"><div class="val-up" style="font-size:${valFs}; margin-bottom: 6px;">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:'<div class="chart-top"></div>'}
-                            <div class="axis-label" style="font-size:${labFs}; ${labWrap}">${displayName}</div>
-                            ${!u?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down" style="font-size:${valFs}; margin-top: 6px;">${c.rate}%</div></div>`:'<div class="chart-bottom"></div>'}
-                        </div>`; 
+                    tableHtml += `
+                        <div class="usda-tr ${i % 2 === 0 ? 'usda-row-even' : 'usda-row-odd'}">
+                            <div class="usda-td col-year">${row.year}</div>
+                            <div class="usda-td col-reason">${row.reason}</div>
+                            <div class="usda-td col-change"><span style="color: ${colorStyle};">${displayC}</span></div>
+                        </div>
+                    `;
+                });
+                tableHtml += `</div></div>`;
+                p.innerHTML = tableHtml;
+
+            } else {
+                document.getElementById('admin-list-title').innerText = "历史管理";
+                
+                cur.data.forEach((it,i)=>{l.innerHTML+=`<div class="data-item"><span><b>${it.date}</b><br><span style="color:#999;font-size:12px;">${it.desc.substring(0, 16)}...</span></span><div><button onclick="copySingleJSON(${i})" style="background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px;">复制</button><button class="btn-edit" onclick="editD(${i})">改</button><button class="btn-delete" onclick="delD(${i})">删</button></div></div>`;}); 
+                
+                cur.data.forEach(ev=>{ 
+                    let max=Math.max(...ev.commodities.map(c=>Math.abs(c.rate)))||1; let ch=''; 
+                    let valFs = '26px'; let labFs = '26px';
+                    let labWrap = state.mode === 'nfp' ? 'white-space: normal; line-height: 1.2;' : 'white-space: nowrap;';
+
+                    ev.commodities.forEach(c=>{ 
+                        let h=Math.max((Math.abs(c.rate)/max)*120,4); let u=c.rate>=0; 
+                        let displayName = c.name;
+                        if(state.mode === 'nfp'){
+                            displayName = c.name.replace('WTI原油', 'WTI<br>原油').replace('CBOT大豆', 'CBOT<br>大豆').replace('现货黄金', '现货<br>黄金').replace('现货白银', '现货<br>白银').replace('大连铁矿石', '大连<br>铁矿石');
+                        }
+
+                        ch+=`<div class="chart-col">
+                                ${u?`<div class="chart-top"><div class="val-up" style="font-size:${valFs}; margin-bottom: 6px;">+${c.rate}%</div><div class="bar-up" style="height:${h}px"></div></div>`:'<div class="chart-top"></div>'}
+                                <div class="axis-label" style="font-size:${labFs}; ${labWrap}">${displayName}</div>
+                                ${!u?`<div class="chart-bottom"><div class="bar-down" style="height:${h}px"></div><div class="val-down" style="font-size:${valFs}; margin-top: 6px;">${c.rate}%</div></div>`:'<div class="chart-bottom"></div>'}
+                            </div>`; 
+                    }); 
+                    p.innerHTML+=`<div class="event-card"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${ch}</div></div>`; 
                 }); 
-                // 注意这里替换了原来的 watermark.png 为 watermark.svg
-                p.innerHTML+=`<div class="event-card"><img class="watermark-img" src="./watermark.svg"><div class="event-header"><div class="event-date">${ev.date}</div><div class="event-tag">${ev.tag}</div></div><div class="event-desc">${ev.desc}</div><div class="chart-box" style="display:grid; grid-template-columns:repeat(${ev.commodities.length},1fr)">${ch}</div></div>`; 
-            }); 
+            }
         }
 
         function editD(i){ state.idx=i; let it=state[state.mode].data[i]; document.getElementById('input-date').value=it.date; document.getElementById('input-tag').value=it.tag; document.getElementById('input-desc').value=it.desc; state[state.mode].c=it.commodities.map(c=>c.name); let v={}; it.commodities.forEach(c=>v[c.name]=c.rate); renderInput(v); document.getElementById('submit-btn').innerText='💾 保存修改'; document.getElementById('submit-btn').style.background='var(--btn-success)'; document.getElementById('cancel-edit-btn').style.display='block'; }
@@ -275,16 +611,31 @@
         function generatePoster(){ 
             let b=document.getElementById('export-btn'); b.innerText='拼命生成中...'; b.style.opacity='0.7';
             let w=document.getElementById('poster-scale-wrapper'); w.style.transform='scale(1)'; 
-            setTimeout(()=>{ html2canvas(document.getElementById('poster-capture'),{width:1242,scale:1.5,useCORS:true}).then(c=>{ let l=document.createElement('a'); l.download='大宗商品行情长图.jpg'; l.href=c.toDataURL('image/jpeg',0.8); l.click(); w.style.transform='scale(0.65)'; b.innerText='⬇ 导出高清长图'; b.style.opacity='1';});},200); 
+            
+            let targetW = state.mode === 'usda' ? 2613 : 1242;
+
+            setTimeout(()=>{ 
+                html2canvas(document.getElementById('poster-capture'),{
+                    width: targetW,
+                    scale: 1.5,
+                    useCORS: true
+                }).then(c=>{ 
+                    let l=document.createElement('a'); 
+                    let filenameMap = {'fed':'美联储', 'nfp':'非农', 'usda':'USDA'};
+                    l.download=`${filenameMap[state.mode]}数据长图.jpg`; 
+                    l.href=c.toDataURL('image/jpeg',0.8); 
+                    l.click(); 
+                    
+                    w.style.transform = state.mode === 'usda' ? 'scale(0.35)' : 'scale(0.65)'; 
+                    b.innerText='⬇ 导出高清长图'; 
+                    b.style.opacity='1';
+                });
+            }, 300); 
         }
 
         function copySingleJSON(i) {
             const jsonStr = JSON.stringify(state[state.mode].data[i], null, 2);
-            navigator.clipboard.writeText(jsonStr).then(() => {
-                alert("✅ 单条数据已复制！你可以直接发给 AI 或粘贴给别人导入。");
-            }).catch(err => {
-                alert("复制失败，可能是浏览器权限限制。");
-            });
+            navigator.clipboard.writeText(jsonStr).then(() => alert("✅ 单条数据已复制！可以直接发给AI或导入。")).catch(err => alert("复制失败，请检查浏览器权限。"));
         }
 
         function importJSON() {
@@ -293,19 +644,26 @@
                 try {
                     const parsed = JSON.parse(jsonStr);
                     if (Array.isArray(parsed)) {
-                        state[state.mode].data = parsed;
+                        state[state.mode].data = parsed; updateViews(); alert("✅ 全部数据导入成功并已覆盖！");
+                    } else if (typeof parsed === 'object' && parsed !== null) {
+                        if(state.mode === 'usda' && !parsed.month) {
+                            alert("❌ 导入失败：USDA模式需要包含 month 字段的 JSON！"); return;
+                        }
+                        if(state.mode !== 'usda' && !parsed.date) {
+                            alert("❌ 导入失败：当前模式需要包含 date 字段的 JSON！"); return;
+                        }
+                        
+                        if(state.mode === 'usda') {
+                            state.usda.data.push(parsed); 
+                            document.getElementById('usda-month-select').value = parsed.month;
+                            renderUsdaList();
+                        } else {
+                            state[state.mode].data.unshift(parsed);
+                        }
                         updateViews();
-                        alert("✅ 全部数据导入成功并已覆盖！");
-                    } else if (typeof parsed === 'object' && parsed !== null && parsed.date) {
-                        state[state.mode].data.unshift(parsed);
-                        updateViews();
-                        alert("✅ 单条数据导入成功，已安全添加到最上方！");
-                    } else {
-                        alert("❌ 格式错误：请粘贴正确的 JSON！");
-                    }
-                } catch (e) {
-                    alert("❌ 解析失败：请确保粘贴的是合法的 JSON 格式！");
-                }
+                        alert("✅ 单条数据导入成功，已安全添加！");
+                    } else { alert("❌ 格式错误：请粘贴正确的 JSON！"); }
+                } catch (e) { alert("❌ 解析失败：请确保粘贴的是合法的 JSON 格式！"); }
             }
         }
         
