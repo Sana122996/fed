@@ -95,7 +95,6 @@
 
         /* ========= 主题3：USDA 供需报告 (超宽2613px表格模式) ========= */
         .theme-usda { background-color: #ebe1da; color: #333333; width: 2613px; }
-        /* 🚨这里将顶部间距 padding-top 改为 0，让表格完全贴合头图🚨 */
         .theme-usda .timeline-container { padding: 0px 80px 60px; position: relative; z-index: 1;}
         .theme-usda .usda-table-container { width: 100%; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.3); background: #ffffff; border: 2px solid #333; position: relative; z-index: 2;}
         .theme-usda .usda-thead { display: flex; background: #d32f2f; color: #fff; } 
@@ -119,7 +118,8 @@
         .theme-usda .usda-td.col-reason { justify-content: flex-start; text-align: left; font-size: 50px; color: #333; }
         .theme-usda .usda-td.col-change { justify-content: center; font-weight: 900; font-size: 68px; }
         
-        .theme-usda .watermark-img { filter: brightness(0); opacity: 0.05; width: 1200px; z-index: 0; }
+        /* 🔥将层级提高至 z-index: 10，确保显示在白色表格上方🔥 */
+        .theme-usda .watermark-img { filter: brightness(0); opacity: 0.05; width: 1200px; z-index: 10; }
 
         .footer-cta { display: flex; align-items: center; justify-content: center; overflow: hidden;}
         .footer-standard { border-top: 1px solid rgba(128, 128, 128, 0.1); padding: 80px 40px; }
@@ -198,7 +198,7 @@
                 <div class="header-image"><img id="poster-header-img" src="./header-bg.jpg"></div>
                 <div class="timeline-container" id="dynamic-timeline"></div>
                 
-                <div class="disclaimer-text" id="poster-disclaimer" style="text-align: center; font-size: 26px; padding-bottom: 30px; opacity: 0.6;">注：以上均为公布当日品种行情日线涨跌</div>
+                <div class="disclaimer-text" id="poster-disclaimer" style="text-align: center; font-size: 34px; padding-bottom: 30px; opacity: 0.6;">注：以上均为公布当日品种行情日线涨跌</div>
                 
                 <div class="footer-cta footer-standard" id="poster-footer">
                     <div class="qr-box"><img src="./qrcode.png"></div>
@@ -425,9 +425,9 @@
         let state = { 
             mode: 'fed', 
             idx: -1, 
-            fed: { data: JSON.parse(localStorage.getItem('f27')) || fedData, c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
-            nfp: { data: JSON.parse(localStorage.getItem('n27')) || nfpData, c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
-            usda: { data: JSON.parse(localStorage.getItem('u27')) || usdaData, c: [] },
+            fed: { data: JSON.parse(localStorage.getItem('f28')) || fedData, c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
+            nfp: { data: JSON.parse(localStorage.getItem('n28')) || nfpData, c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
+            usda: { data: JSON.parse(localStorage.getItem('u28')) || usdaData, c: [] },
             usdaMonth: 1 
         };
 
@@ -520,7 +520,7 @@
 
         function updateViews(){ 
             const cur=state[state.mode]; 
-            let storageKey = state.mode === 'fed' ? 'f27' : (state.mode === 'nfp' ? 'n27' : 'u27');
+            let storageKey = state.mode === 'fed' ? 'f28' : (state.mode === 'nfp' ? 'n28' : 'u28');
             localStorage.setItem(storageKey, JSON.stringify(cur.data)); 
             
             const l = document.getElementById('admin-data-list'); l.innerHTML=''; 
