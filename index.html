@@ -429,7 +429,7 @@
             idx: -1, 
             fed: { data: JSON.parse(localStorage.getItem('f29')) || fedData, c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
             nfp: { data: JSON.parse(localStorage.getItem('n29')) || nfpData, c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
-            usda: { data: JSON.parse(localStorage.getItem('u29')) || usdaData, c: [] },
+            usda: { data: JSON.parse(localStorage.getItem('u30')) || usdaData, c: [] },
             usdaMonth: 1 
         };
 
@@ -522,7 +522,7 @@
 
         function updateViews(){ 
             const cur=state[state.mode]; 
-            let storageKey = state.mode === 'fed' ? 'f29' : (state.mode === 'nfp' ? 'n29' : 'u29');
+            let storageKey = state.mode === 'fed' ? 'f29' : (state.mode === 'nfp' ? 'n29' : 'u30');
             localStorage.setItem(storageKey, JSON.stringify(cur.data)); 
             
             const l = document.getElementById('admin-data-list'); l.innerHTML=''; 
