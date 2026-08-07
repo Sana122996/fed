@@ -217,6 +217,9 @@
         ];
 
         const nfpData = [
+            {date:"2026年6月",tag:"数据亮点",desc:"美国经济6月新增非农就业岗位5.7万个，低于华尔街预期。此前连续三个月就业增长超预期，6月就业增速放缓，促使市场下调了对美联储加息的预期。美国劳工统计局周四公布的数据显示，6月新增就业岗位较5月向下修正后的12.9万个大幅下降，也低于彭博社调查中经济学家预测的11.5万个。",commodities:[{name:"沪金",rate:2.4},{name:"沪银",rate:4.4},{name:"沪铝",rate:0.13},{name:"沪铜",rate:0.03},{name:"伦铜",rate:-0.34},{name:"伦铝",rate:-0.31},{name:"WTI原油",rate:0.54},{name:"CBOT大豆",rate:-0.24},{name:"现货黄金",rate:2.26},{name:"现货白银",rate:3.16}]},
+            {date:"2026年5月",tag:"数据亮点",desc:"美国5月季调后非农就业人口录得增加17.2万人，高于市场预期的增加8.5万人。美国5月失业率录得4.3%，连续第二个月持稳，符合市场预期。美国利率期货数据显示，美联储12月加息的概率从之前的48%上升至63%。",commodities:[{name:"沪金",rate:-0.4},{name:"沪银",rate:-1.14},{name:"沪铝",rate:-0.06},{name:"沪铜",rate:0},{name:"伦铜",rate:-2.78},{name:"伦铝",rate:-1.84},{name:"WTI原油",rate:-2.86},{name:"CBOT大豆",rate:-0.58},{name:"现货黄金",rate:-3.38},{name:"现货白银",rate:-8.11}]},
+            {date:"2026年4月",tag:"数据亮点",desc:"4月美国经济新增就业岗位11.5万个，连续第二个月超出华尔街预期。这一数字低于3月份上修后的18.5万个新增岗位，但高于机构调查中经济学家预期的6.5万个。近几个月来，美国就业数据波动较大，在大幅增长与大幅下滑之间摇摆，令分析师难以评估整体经济健康状况。",commodities:[{name:"沪金",rate:-0.27},{name:"沪银",rate:1.7},{name:"沪铝",rate:0.27},{name:"沪铜",rate:1.5},{name:"伦铜",rate:1.59},{name:"伦铝",rate:0.34},{name:"WTI原油",rate:-3.05},{name:"CBOT大豆",rate:1.28},{name:"现货黄金",rate:0.65},{name:"现货白银",rate:2.16}]},
             {date:"2026年3月",tag:"数据亮点",desc:"美国3月季调后非农就业人口增加17.8万人，远超6万人的市场预期，创2024年12月以来最高水平，较上月就业“负增长”的情况大幅改善。1月份非农新增就业人数从增加12.6万人上修至增加16万人；2月份非农新增就业人数从减少9.2万人下修至减少13.3万人。修正后，1月和2月新增就业人数合计较修正前低0.7万人。市场定价显示，美联储2026年降息押注下降。",commodities:[{name:"沪金",rate:0.90},{name:"沪银",rate:1.26},{name:"沪铝",rate:-0.24},{name:"沪铜",rate:0.39}]},
             {date:"2026年2月",tag:"数据亮点",desc:"美国2月季调后非农就业人口减少9.2万人，继2025年10月之后再次录得负值，市场预期增加5.9万人。12月份非农新增就业人数从4.8万人修正至-1.7万人；1月份非农新增就业人数从13万人修正至12.6万人。经修正后，12月和1月新增就业人数合计较修正前减少6.9万人非农数据很可能向美联储施压，使其考虑恢复降息。眼下的情况与许多官员此前描述的“趋于稳定”完全不符。",commodities:[{name:"沪金",rate:-0.97},{name:"沪银",rate:0.47},{name:"沪铝",rate:-0.40},{name:"沪铜",rate:-0.03},{name:"伦铜",rate:0.08},{name:"伦铝",rate:4.21},{name:"WTI原油",rate:15.72},{name:"CBOT大豆",rate:1.93},{name:"现货黄金",rate:1.84},{name:"现货白银",rate:2.52}]},
             {date:"2026年1月",tag:"数据亮点",desc:"美国1月季调后非农就业人口增加13万人，大幅高于市场预期中值7万人，创2025年4月以来最大增幅。美国1月失业率录得4.3%，略低于市场预期的4.4%，创2025年8月以来新低。11月份非农新增就业人数从5.6万人修正至4.1万人；12月份非农新增就业人数从5.0万人修正至4.8万人。修正后，11月和12月新增就业人数合计较修正前低1.7万人。交易员们完全定价美联储7月降息，此前预期为6月。",commodities:[{name:"沪金",rate:0.82},{name:"沪银",rate:3.25},{name:"沪铝",rate:0.62},{name:"沪铜",rate:0.61},{name:"伦铜",rate:1.06},{name:"伦铝",rate:0.39},{name:"WTI原油",rate:1.07},{name:"CBOT大豆",rate:0.02},{name:"现货黄金",rate:1.22},{name:"现货白银",rate:4.34}]},
@@ -339,6 +342,7 @@
             {"month": 7,"year": "2011年","change": "1.58%","reason": "USDA发布的供需数据中性,但邻池玉米大幅走强带动豆价"},
             {"month": 7,"year": "2010年","change": "-0.24%","reason": "虽然USDA上调美国大豆期末库存预估，但对恶劣天气可能不利新作生长的担忧抵消此不利影响"},
             {"month": 7,"year": "2009年","change": "-0.60%","reason": "USDA上调美国大豆期末库存预估，但空头回补帮助扭转早盘跌势"},
+            {"month": 8,"year": "2025年","change": "0.94%","reason": "美豆种植面积/收获面积均有所缩小，美豆产量下降，期末库存大幅下降，报告整体利多"},
             {"month": 8,"year": "2024年","change": "-2.73%","reason": "USDA上调美国大豆产量预估，增加对全球供应充足的预期。"},
             {"month": 8,"year": "2023年","change": "-1.00%","reason": "虽然USDA将美豆单产预测超预期下调至50.9蒲/英亩，但市场认为良好的天气将会扭转单产下滑的态势"},
             {"month": 8,"year": "2022年","change": "-0.34%","reason": "USDA月报上调了美豆单产和产量，期末库存触底回升，美豆供应将趋于宽松"},
@@ -477,6 +481,51 @@
             return repairedData;
         }
 
+        const NFP_FORCE_BUILTIN_DATES = new Set([
+            "2026年6月",
+            "2026年5月",
+            "2026年4月"
+        ]);
+
+        function parseNfpDate(dateText) {
+            const match = String(dateText || '').match(/(\d{4})年(\d{1,2})月/);
+            if (!match) return 0;
+            return new Date(Number(match[1]), Number(match[2]) - 1, 1).getTime();
+        }
+
+        function loadNfpData() {
+            let savedData = [];
+
+            try {
+                const parsed = JSON.parse(localStorage.getItem('n29'));
+                if (Array.isArray(parsed)) savedData = parsed;
+            } catch (error) {
+                console.warn('读取非农本地缓存失败，已开始修复缓存：', error);
+            }
+
+            const mergedByDate = new Map();
+
+            // 先保留用户本地已有数据。
+            savedData.forEach(item => {
+                if (!item || !item.date) return;
+                mergedByDate.set(item.date, item);
+            });
+
+            // 再补齐代码内置数据；2026年4/5/6月强制使用本文件最新版，避免旧缓存把新增数据挡住。
+            nfpData.forEach(item => {
+                if (!item || !item.date) return;
+                if (!mergedByDate.has(item.date) || NFP_FORCE_BUILTIN_DATES.has(item.date)) {
+                    mergedByDate.set(item.date, item);
+                }
+            });
+
+            const repairedData = Array.from(mergedByDate.values())
+                .sort((a, b) => parseNfpDate(b.date) - parseNfpDate(a.date));
+
+            localStorage.setItem('n29', JSON.stringify(repairedData));
+            return repairedData;
+        }
+
         function loadStoredData(key, fallbackData) {
             try {
                 const savedData = JSON.parse(localStorage.getItem(key));
@@ -487,12 +536,51 @@
             }
         }
 
+        const USDA_FORCE_BUILTIN_KEYS = new Set([
+            "8|2025年"
+        ]);
+
+        function loadUsdaData() {
+            let savedData = null;
+
+            try {
+                const parsed = JSON.parse(localStorage.getItem('u30'));
+                if (Array.isArray(parsed)) savedData = parsed;
+            } catch (error) {
+                console.warn('读取USDA本地缓存失败，已开始修复缓存：', error);
+            }
+
+            // 没有旧缓存时直接使用完整内置 USDA 数据。
+            if (!Array.isArray(savedData)) {
+                const freshData = usdaData.map(item => ({...item}));
+                localStorage.setItem('u30', JSON.stringify(freshData));
+                return freshData;
+            }
+
+            const mergedByKey = new Map();
+            savedData.forEach(item => {
+                if (!item || item.month == null || !item.year) return;
+                mergedByKey.set(`${parseInt(item.month)}|${item.year}`, item);
+            });
+
+            // 只强制迁移本次新增的 2025年8月，避免旧 u30 缓存把新版数据挡住。
+            usdaData.forEach(item => {
+                if (!item || item.month == null || !item.year) return;
+                const key = `${parseInt(item.month)}|${item.year}`;
+                if (USDA_FORCE_BUILTIN_KEYS.has(key)) mergedByKey.set(key, item);
+            });
+
+            const repairedData = Array.from(mergedByKey.values());
+            localStorage.setItem('u30', JSON.stringify(repairedData));
+            return repairedData;
+        }
+
         let state = { 
             mode: 'fed', 
             idx: -1, 
             fed: { data: loadFedData(), c: ["CBOT大豆","WTI原油","现货黄金","大连铁矿石","LME铜"] }, 
-            nfp: { data: loadStoredData('n29', nfpData), c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
-            usda: { data: loadStoredData('u30', usdaData), c: [] },
+            nfp: { data: loadNfpData(), c: ["沪金","沪银","沪铝","沪铜","伦铜","伦铝","WTI原油","CBOT大豆","现货黄金","现货白银"] },
+            usda: { data: loadUsdaData(), c: [] },
             usdaMonth: 1 
         };
 
