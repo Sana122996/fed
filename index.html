@@ -375,6 +375,8 @@
             {"month": 9,"year": "2011年","change": "-2.16%","reason": "USDA上调美豆单产和产量预测数据"},
             {"month": 9,"year": "2010年","change": "-1.12%","reason": "USDA公布的美豆产量预估高于预期"},
             {"month": 9,"year": "2009年","change": "-2.54%","reason": "USDA上调美豆单产和产量预测数据"},
+            {"month": 10,"year": "2025年","change": "-","reason": "因美国联邦政府自2025年10月1日起停摆，USDA暂停了10月数据发布。"},
+            {"month": 10,"year": "2024年","change": "-0.91%","reason": "下调美豆单产预期，但仍处于历史高产量，产区天气改善"},
             {"month": 10,"year": "2023年","change": "2.79%","reason": "USDA下调美豆单产预估"},
             {"month": 10,"year": "2022年","change": "1.49%","reason": "USDA下调美豆单产预估"},
             {"month": 10,"year": "2021年","change": "-2.40%","reason": "USDA上调美豆单产及期末库存预估"},
@@ -540,6 +542,10 @@
         const USDA_FORCE_BUILTIN_KEYS = new Set([
             "8|2025年"
         ]);
+        // 本次新增的历史记录：仅在旧缓存缺少时补入，不覆盖用户后续修改。
+        const USDA_NEW_BUILTIN_KEYS = new Set([
+            "10|2024年", "10|2025年"
+        ]);
 
         function loadUsdaData() {
             let savedData = null;
@@ -564,11 +570,14 @@
                 mergedByKey.set(`${parseInt(item.month)}|${item.year}`, item);
             });
 
-            // 只强制迁移本次新增的 2025年8月，避免旧 u30 缓存把新版数据挡住。
+            // 保留原有强制迁移逻辑，并为旧缓存补齐新增的10月数据。
             usdaData.forEach(item => {
                 if (!item || item.month == null || !item.year) return;
                 const key = `${parseInt(item.month)}|${item.year}`;
-                if (USDA_FORCE_BUILTIN_KEYS.has(key)) mergedByKey.set(key, item);
+                if (USDA_FORCE_BUILTIN_KEYS.has(key) ||
+                    (USDA_NEW_BUILTIN_KEYS.has(key) && !mergedByKey.has(key))) {
+                    mergedByKey.set(key, item);
+                }
             });
 
             const repairedData = Array.from(mergedByKey.values());
